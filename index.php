@@ -4,7 +4,7 @@
 <head>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
 	<title>Impet firmy</title>
-	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp?key=AIzaSyDHaItyuZuyU_DvDJ9y-BnUu7WHionh29A"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp?key=AIzaSyDHaItyuZuyU_DvDJ9y-BnUu7WHionh29A&libraries=weather"></script>
 	<link rel="Shortcut icon" href="./images/impetIkona.png" />
 	<link type="text/css" href="./css/ui.css" rel="stylesheet">
 	<link rel="stylesheet" href="./css/theme.blue.css">
@@ -95,13 +95,20 @@
 			<div id='ustawieniaMiast'>
 				<input type='checkbox' id='czyMiasta'>
 				<input type='color' id='colorMiast'>
-				<div id='opacityMiast' style='width:200px; float:left; margin:10px;'></div>
+				<div id='opacityMiast'></div>
 			</div>
 			<div id='optFirmy'>
 				<label for="czyNasi">Wszyscy?</label>
 				<input type="checkbox" id="czyNasi" />
 			</div>
-			<h1>A tak</h1>
+			<div id="divAutomatycznieZoom">
+				<label for="czyAutomatycznieZoom">Zoom automatyczny?</label>
+				<input type="checkbox" id="czyAutomatycznieZoom" />
+			</div>
+			<div id="divAutomatycznyPan">
+				<label for="czyAutomatycznyPan">Oddnajdywac punkty?</label>
+				<input type="checkbox" id="czyAutomatycznyPan" />
+			</div>
 		</div>
 		<div>
 			<button id="button-panel-gorny">

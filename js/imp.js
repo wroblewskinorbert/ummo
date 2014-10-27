@@ -1393,7 +1393,7 @@ function initialize() {
 		$('#button-panel-gorny2')
 			.click(function(e) {
 				$(this)
-					.parent()
+					//.parent()
 					.prev()
 					.slideToggle();
 			})

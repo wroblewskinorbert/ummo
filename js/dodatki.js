@@ -1,3 +1,10 @@
+weatherLayer = new google.maps.weather.WeatherLayer({
+   temperatureUnits: google.maps.weather.TemperatureUnit.CELSIUS
+});
+
+cloudLayer = new google.maps.weather.CloudLayer();
+
+
 function mapaStyl() {
 	var style = [{
 			featureType : 'all',
@@ -233,3 +240,5 @@ function utworzEtykieteNaMapie(tresc, position) {
 	ibLabel.open(map);
 	return ibLabel;
 }
+
+
