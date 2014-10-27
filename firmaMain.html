@@ -1,0 +1,60 @@
+<style>
+	#containerForData {
+		display: inline-block;
+		width: 480px;
+	}
+	#ulica,
+	#email,
+	#ocena,
+	#oddo,
+	#obrot {
+		float: left;
+		width: 49%;
+	}
+	#miejscowosc,
+	#www,
+	#priorytet,
+	#ostatnia,
+	#spoznienie {
+		float: right;
+		width: 49%;
+	}
+	#ocena,
+	#priorytet {
+		text-align: center;
+	}
+	#spoznienie,
+	#obrot,
+	#miejscowosc,
+	#ostatnia {
+		text-align: right;
+	}
+	#nazwa {
+		padding: 5px;
+		margin: 5px;
+		font-family: courier new;
+		font-size: 1.3em;
+	}
+</style>
+
+<div id="containerForData">
+	<label for="nazwa">Nazwa firmy</label></br>
+	<b><input type="text" id="nazwa" value="{{nazwa}}"></input></b></br>
+	<label for="ulica">Ulica</label>
+	<label for="kod">Kod</label>
+	<label for="miejscowosc">Miejscowosc</label></br>
+	<input type="text" id="ulica" value="{{ulica}}"/>
+	<input type="text" id="kod" value="{{kod}}"/>
+	<b><i><input type="text" id="miejscowosc">{{miejscowosc}}</input></i></b>
+	
+	<input type="text" id="email"><a href="mailto:{{email}}" target="_blank">{{email}}</a></input>
+	<input type="text" id="www">{{www}}</div>
+	<div style="clear:both;">
+		<div id="ocena">Ocena: {{ocena}}</div>
+		<div id="priorytet">Priorytet: {{priorytet}}</div>
+	</div>
+	<div id="oddo">{{od}}{{do}}</div>
+	<div id="ostatnia">{{ostatnia}}</div>
+	<div id="obrot">{{obrot}}</div>
+	<div id="spoznienie">{{spoznienie}}</div>
+</div>

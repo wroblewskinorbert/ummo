@@ -1,0 +1,57 @@
+<form id="obsluga" name="obluga">
+	zoom: <span style="color:red;" id="zoomText">8</span>
+	<button id="przeladujObluge">Przeładuj obsługę</button>
+	<hr>
+	<button id="przeladuMape">Przeładuj mapę</button>
+	<br />
+	<button id="wczytajPanelDolny">Przeładuj panel</button>
+	<br />
+	<button id="wczytajMiejscowosci">Wczytaj miejscowosci</button>
+	<br />
+	<br>Miejscowosc:
+	<br />
+	<input type="text" id="inputMiejscowosc" name="inputMiejscowosc" />
+	<br />
+	<br>Firma:
+	<br />
+	<input type="text" id="inputFirma" name="inputFirma" />
+	<br />
+	<br>
+	<button id="poprzedniaFirma">&lt;&lt;</button>
+	<button id="zapiszRekord">Zapisz</button>
+	<button id="nastepnaFirma">&gt;&gt;</button>
+	<br />Markery wid.:<span id='markeryWidoczne'></span>
+	<br />Tabelę generować?
+	<input type="radio" value="0" name="generowanieTabeli" id="czyGenerowacWOgole" title="Czy wyłączyć generowanie tabeli?" checked>nie
+	<input type="radio" value="1" name="generowanieTabeli" id="czyGenerowacWTle" title="Czy wyłączyć generowanie tabelę w tle?">w tle
+	<input type="radio" value="2" name="generowanieTabeli" id="czyGenerowac" title="Czy generować tabelę?">tak Ocena:
+	<input store name='ogranicznik' id='filtrOcena' title='Filtrowanie poprzez ocenę' type="range" min='-1' max='6' value="-1" /><span id='spanOcena'>-1</span>
+	Priorytet:
+	<input store name='ogranicznikPriorytetu' title='Filtrowanie poprzez priorytet' id='filtrPriorytet' type="range" min='-1' max='6' value="-1" /><span id='spanPriorytet'>-1</span>
+	<br/>Zoom:
+	<input store name='ogranicznikZoomu' title='Zdecyduj na którym poziomie widzisz za dużo markerów' id='filtrZoom' type="range" min='5' max='12' value="7" /><span id='spanZoom'>7</span>
+	<br/>
+	<label for="rysowac">Rysować?</label>
+	<input store type="checkbox" id="rysowac">
+	<br/>
+	<label for="wszyscy">Wszystkie?</label>
+	<input store type="checkbox" id="wszyscy">
+	<br/>
+	<label for="okragle">Okrągłe?</label>
+	<input store type="checkbox" id="okragle">
+	<br/>Wielkość:
+	<input store name='ogranicznikWielkosci' title='Jednak ma znaczenie!!!' id='wielkoscMarkerow' type="range" min='1' max='12' value="4"><span id='spanWielkosc'>7</span>
+	<br/>
+	<label for="wyborMiast">Zaznaczenie wikszych miast w podrozy</label>
+	<input type="checkbox" id="wyborMiast" name="wyborMiast" checked='checked'>
+	<br />
+	<br />
+	<button id='dodajTrase'>Doodaj trase</button>
+	<br/>
+	<label for="markerySchowac">Markery schować?</label>
+	<input store type="checkbox" id="markerySchowac">
+	<label for="miastaSchowac">Miasta schować??</label>
+	<input store type="checkbox" id="miastaSchowac">
+	
+</form>
+<button id='edycjaFirmyButton' onclick="edytujJuz()">edytuj</button>

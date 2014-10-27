@@ -1,0 +1,65 @@
+<style>
+	#containerForData {
+		display: inline-block;
+		width: 280px;
+		box-shadow: rgba(148, 148, 148, 0.4) 3px 3px 22px -2px ;
+		overflow: visible;	
+background: linear-gradient(124deg, #FEFEFE 10%, rgba(216, 255, 229, 0.81) 65%, #FFFFFF 100%, #FFFFFF 72%, #FFFFFF 100%);/* W3C */
+	}
+	#ulica,
+	#email,
+	#ocena,
+	#oddo,
+	#obrot {
+		float: left;
+		width: 49%;
+	}
+	#miejscowosc,
+	#www,
+	#priorytet,
+	#ostatnia,
+	#spoznienie {
+		float: right;
+		width: 49%;
+	}
+	#ocena,
+	#priorytet {
+		text-align: center;
+	}
+	#spoznienie,
+	#obrot,
+	#miejscowosc,
+	#ostatnia {
+		text-align: right;
+	}
+	#nazwa {
+		padding: 5px;
+		margin: 5px;
+		font-family: courier new;
+		font-size: 1.3em;
+		text-shadow: -3px 3px 5px rgba(69,11,21,0.2);/* FF3.5+, Opera 9+, Saf1+, Chrome, IE10 */
+			}
+	#infoUwagi{
+		position: absolute;
+		bottom:2px;
+		left:2px;
+		 
+		
+	}
+</style>
+
+<div id="containerForData">
+	<b><div id="nazwa">{{nazwa}}</div></b>
+	<div id="ulica">{{ulica}}</div><b><i><div id="miejscowosc">{{miejscowosc}}</div></i></b>
+	<div id="email"><a href="mailto:{{email}}" target="_blank">{{email}}</a></div>
+	<div id="www">{{www}}</div>
+	<div style="clear:both;">
+		<div id="ocena">Ocena: {{ocena}}</div>
+		<div id="priorytet">Priorytet: {{priorytet}}</div>
+	</div>
+	<div id="oddo">{{od}} {{do}}</div>
+	<div id="ostatnia">{{ostatnia}}</div>
+	<div id="obrot">{{obrot}}</div>
+	<div id="spoznienie">{{spoznienie}}</div>
+	<div id="infoUwagi"><input type="checkbox" id="czyUwagiWyswietlac" /></div>
+</div>

@@ -1,0 +1,53 @@
+@charset "utf-8";/* CSS Document */
+		#lewy,
+		#prawy,
+		#mapCanvas,
+		body,
+		html {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+		#mapCanvas {
+			width: auto;
+		}
+		#lewy,
+		#prawy,
+		#goraIn {
+			position: relative;
+			z-index: 2;
+			box-shadow: 0 0 3px 4px rgba(0, 0, 0, 0.24);
+		}
+		#lewy {
+			float: left;
+			width: 10%;
+		}
+		#prawy {
+			float: right;
+			width: 300px;
+		}
+		#goraIn {
+			height: 67px;
+			overflow: hidden;
+			z-index:5;
+			position:relative;
+			background-color: rgba(232, 255, 246, 0.74);
+		}
+	#dol, #dolIn {
+			height: 76px;
+			overflow: hidden;
+			z-index: 8;
+			position: relative;
+			background-color: rgba(232, 22, 246, 0.74);
+		
+			/* float: left; */
+			clear: both;
+			width: 100%;
+			display: table-cell;
+}
+
+		#dol{
+			clear:both;
+		}

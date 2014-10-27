@@ -1,0 +1,94 @@
+.hidden {
+	display: none;
+
+}
+
+* {
+	box-sizing: borderBox;
+}
+html, body {
+	height: 100%;
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+	
+	overflow: hidden;
+}
+body {
+	display: flex;
+	flex-flow: column;
+	
+}
+div#goraIn {
+	background-color: beige;
+	flex: 1 10%;
+}
+
+#goraOut {
+	background-color: blue;
+	flex: 1 10%;
+}
+
+#srodekOut {
+	flex: 9 100%;
+	display: flex;
+	height:100%;
+}
+
+#lewyOut {
+	flex: 1 100px;
+	background-color: rgba(150,255,255,0.3);
+	 
+}
+
+#prawyOut {
+	background-color: rgba(229, 188, 201, 0.76);
+	flex: 1 100px;
+	/* width: 10%; */
+}
+
+#dolOut {
+	background-color: ghostwhite;
+	flex: 2 107px;
+}
+
+#goraIn {
+	/* overflow: hidden; */
+	flex: 1 100px;
+	background-color: lavender;
+}
+
+
+#prawyIn {
+	width: 200px;
+}
+
+#lewyIn {
+	width: 100px;
+}
+
+
+
+#srodekIn {
+
+	display: flex;
+	flex:8 auto;
+	flex-flow: column;
+}
+
+#mapContainer {
+	display: flex;
+	flex: 8 auto;
+	height: 100%;
+}
+
+
+#mapCanvas {
+	flex: auto;
+		width: 100%;
+}
+
+#dolIn {
+	background-color: greenyellow;
+	height: 100px;
+}
