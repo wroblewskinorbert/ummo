@@ -12,7 +12,7 @@
 </head>
 <body>
 	<div id="main-container">
-		<div id='obsluga'></div>
+		<div id='divObsluga'></div>
 		<div id='map-container'>
 			<div id="panelLewy">
 				<div id="panelLewyWrapper">

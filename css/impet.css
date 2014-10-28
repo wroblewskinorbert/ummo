@@ -360,10 +360,11 @@ div#panelLewyTrasa{
 
 
 
-#ustawieniaMiast {
-	
+
+button#edycjaFirmyButton {
+    float: left;
 }
 
-#opacityMiast {
-	width:200px; float:left; margin:10px;
+div#divObsluga {
+    width: 160px;  float: right;
 }

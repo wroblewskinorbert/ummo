@@ -1,11 +1,13 @@
-<form id="obsluga" name="obluga">
-	zoom: <span style="color:red;" id="zoomText">8</span>
+	zoom: <span style="color:red;" id="zoomText">8</span><br />
+	wyswietlane: <span id="ileMarkerowWyswietlanych"></span>
 	<button id="przeladujObluge">Przeładuj obsługę</button>
 	<hr>
 	<button id="przeladuMape">Przeładuj mapę</button>
 	<br />
-	<button id="wczytajPanelDolny">Przeładuj panel</button>
+	<button id="dodajTraseDoListyIWyswietl">Dodaj trase do listy</button>
 	<br />
+	<button id='dodajTrase'>Doodaj trase</button>
+	<br/>
 	<button id="wczytajMiejscowosci">Wczytaj miejscowosci</button>
 	<br />
 	<br>Miejscowosc:
@@ -25,33 +27,32 @@
 	<input type="radio" value="0" name="generowanieTabeli" id="czyGenerowacWOgole" title="Czy wyłączyć generowanie tabeli?" checked>nie
 	<input type="radio" value="1" name="generowanieTabeli" id="czyGenerowacWTle" title="Czy wyłączyć generowanie tabelę w tle?">w tle
 	<input type="radio" value="2" name="generowanieTabeli" id="czyGenerowac" title="Czy generować tabelę?">tak Ocena:
-	<input store name='ogranicznik' id='filtrOcena' title='Filtrowanie poprzez ocenę' type="range" min='-1' max='6' value="-1" /><span id='spanOcena'>-1</span>
+<form id="obsluga" name="obluga">
+	<input store name='ogranicznik' id='filtrOcena' title='Filtrowanie poprzez ocenę' type="range" min='-1' max='6' value="-1" /><span id='valfiltrOcena'>-1</span>
 	Priorytet:
-	<input store name='ogranicznikPriorytetu' title='Filtrowanie poprzez priorytet' id='filtrPriorytet' type="range" min='-1' max='6' value="-1" /><span id='spanPriorytet'>-1</span>
+	<input store name='ogranicznikPriorytetu' title='Filtrowanie poprzez priorytet' id='filtrPriorytet' type="range" min='-1' max='6' value="-1" /><span id='valfiltrPriorytet'>-1</span>
 	<br/>Zoom:
-	<input store name='ogranicznikZoomu' title='Zdecyduj na którym poziomie widzisz za dużo markerów' id='filtrZoom' type="range" min='5' max='12' value="7" /><span id='spanZoom'>7</span>
+	<input store name='ogranicznikZoomu' title='Zdecyduj na którym poziomie widzisz za dużo markerów' id='ogranicznikZoomu' type="range" min='5' max='12' value="7" /><span id='valogranicznikZoomu'></span>
 	<br/>
 	<label for="rysowac">Rysować?</label>
-	<input store type="checkbox" id="rysowac">
+	<input store checked="checked" type="checkbox" id="rysowac">
 	<br/>
 	<label for="wszyscy">Wszystkie?</label>
 	<input store type="checkbox" id="wszyscy">
 	<br/>
 	<label for="okragle">Okrągłe?</label>
-	<input store type="checkbox" id="okragle">
+	<input store checked="checked" type="checkbox" id="okragle">
 	<br/>Wielkość:
-	<input store name='ogranicznikWielkosci' title='Jednak ma znaczenie!!!' id='wielkoscMarkerow' type="range" min='1' max='12' value="4"><span id='spanWielkosc'>7</span>
+	<input store name='ogranicznikWielkosci' title='Jednak ma znaczenie!!!' id='ogranicznikWielkosci' type="range" min='1' max='12' value="2"><span id='valogranicznikWielkosci'>7</span>
 	<br/>
 	<label for="wyborMiast">Zaznaczenie wikszych miast w podrozy</label>
 	<input type="checkbox" id="wyborMiast" name="wyborMiast" checked='checked'>
 	<br />
 	<br />
-	<button id='dodajTrase'>Doodaj trase</button>
-	<br/>
 	<label for="markerySchowac">Markery schować?</label>
-	<input store type="checkbox" id="markerySchowac">
+	<input  type="checkbox" id="markerySchowac">
 	<label for="miastaSchowac">Miasta schować??</label>
-	<input store type="checkbox" id="miastaSchowac">
+	<input  type="checkbox" id="miastaSchowac">
 	
 </form>
 <button id='edycjaFirmyButton' onclick="edytujJuz()">edytuj</button>
