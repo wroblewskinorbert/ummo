@@ -1,3 +1,4 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript"></script>
 <style>
 	#containerForData {
 		display: inline-block;
@@ -50,33 +51,101 @@
 
 <div id="containerForData">
 	<form id="formularzFirmy">
-	<div name="nazwa"><b>{{nazwa}}</b></div>
-	<div name="ulica">{{ulica}}</div><b><i><div name="miejscowosc">{{miejscowosc}}</div></i></b>
-	<div name="email"><a href="mailto:{{email}}" target="_blank">{{email}}</a>
-	</div>
-	<div name="www">{{www}}</div>
-	<div style="clear:both;">
+		<div name="nazwa"><b>{{nazwa}}</b>
+		</div>
+		<div name="ulica">{{ulica}}</div><div name="miejscowosc">{{miejscowosc}}</div>
+		<div name="email"><a href="mailto:{{email}}" target="_blank">{{email}}</a>
+		</div>
+		<div name="www">{{www}}</div>
 		<div name="ocena">Ocena: {{ocena}}</div>
 		<div name="priorytet">Priorytet: {{priorytet}}</div>
-	</div>
-	<div name="oddo">{{od}} {{do}}</div>
-	<div name="ostatnia">{{ostatnia}}</div>
-	<div name="obrot">{{obrot}}</div>
-	<div name="spoznienie">{{spoznienie}}</div>
-	<div name="infoUwagi">
-		<!--	<input type="checkbox" id="czyUwagiWyswietlac" />-->
-	</div>
+		<div name="oddo">{{od}} {{do}}</div>
+		<div name="ostatnia">{{ostatnia}}</div>
+		<div name="obrot">{{obrot}}</div>
+		<div name="spoznienie">{{spoznienie}}</div>
+		<div name="infoUwagi">
+			<!--	<input type="checkbox" id="czyUwagiWyswietlac" />-->
+		</div>
 
 </div>
 <script>
-function wypelnijNazwami(obj, formularz){
-	for (var x in obj){
-		if(x in $('#formularzFirmy').children().toArray());
-		if(khId&&khId.komunikat){
-			var iframeWin= $('<div id="komunikat"></div>').html(khId.komunikat).appendTo($('div[name="infoUwagi"]'));
-		}
-	}
-	
-}
+	var impet;
+	impet = impet || {};
+	var serwer = 'http://localhost';
+	var dbo = [];
+	$.when(
+		$.get(serwer + '/ajax/ajaxuniversal4.php', {
+			table: 'PlMiejscowosci',
+			condition: 'id=id',
+			action: 'select',
+			data: 0
+		}, function (data) {
+			impet = impet || {};
+			impet.miasta = data;
+			impet.miastaId = [];
+			impet.miasta.forEach(function (ele, ind, tab) {
+				impet.miastaId[ele.id] = ele;
+			});
+		}),
+		$.post(serwer + '/ajax/ajaxuniversal4.php', {
+			table: 'Firmy',
+			condition: 'id=id',
+			action: 'select',
+			data: 0
+		})
+		.done(function (data) {
+			dbo.tblFirmy = data;
+		}),
+		$.post(serwer + '/ajax/ajaxuniversal4.php', {
+			table: 'FirmyV',
+			condition: 'khId=khId',
+			action: 'select',
+			data: 0
+		}, function (data) {
+			dbo.tblFirmyV = data;
+		})
+	)
+		.done(function (data) {
+			FirmyImpet = dbo.tblFirmy;
+			FirmyKh = [];
+			myFirmyId = [];
+			var Data = dbo.tblFirmyV;
+			for (var x in Data) {
+				FirmyKh[Data[x].khId] = Data[x];
+			}
+			for (x = 0, len = FirmyImpet.length; x < len; x++) {
+				if (FirmyKh[FirmyImpet[x].khId]) {
+					FirmyImpet[x].kh = FirmyKh[FirmyImpet[x].khId];
+				}
+				if (FirmyImpet[x].wspN === null)
+					FirmyImpet[x].wspN = '49.000000';
+				if (FirmyImpet[x].wspE === null)
+					FirmyImpet[x].wspE = '19.000000';
+				if (FirmyImpet[x].ocena === null)
+					FirmyImpet[x].ocena = -1;
+				if (FirmyImpet[x].priorytet === null)
+					FirmyImpet[x].priorytet = -1;
+				FirmyImpet[x].miejscowosc = impet.miastaId[FirmyImpet[x].miejscowoscId];
+				impet.firmyId = FirmyImpet[x];
+			}
+			impet.firmy = FirmyImpet;
 
+			// domyslnym uzytkownikiem jestem
+		});
+
+	function wypelnij() {
+		formularz = document.forms['formularzFirmy'];
+		 obj = impet.firmy[1];
+		var temp = ["id", "khId", "nazwa", "ulica", "uwagi", "email", "www", "ocena", "priorytet", "wspN", "wspE", "od", "do", "miejscowoscId", "kh", "miejscowosc"];
+		temp = Object.getOwnPropertyNames(obj);
+		//temp = temp.slice(0);
+		temp.forEach(function (ele, ind) {
+			{
+				console.log(temp);
+				console.log(ele);
+				if (formularz.children[ele])
+					formularz.children[ele].innerHTML = obj[ele];
+			}
+		})
+	}
 </script>

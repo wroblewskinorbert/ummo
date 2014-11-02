@@ -405,7 +405,7 @@ TrasaShow.prototype.TwoPointsToWay = function (fromPoint, toPoint, reply) {
 };
 
 function miastaOpacity(event, ui) {
-	MiastaKontroler.changeOptions({
+	impet.miastaSter.changeOptions({
 		fillOpacity: ui.value
 	});
 }
@@ -413,7 +413,7 @@ var inKolor, chboxMiasta, Firmy, Markero, Trasy, TrasyClass;
 
 function wczytajPanelDolny() {
 	inKolor = $('#colorMiast');
-	inKolor.val(MiastaKontroler.options.fillColor);
+	inKolor.val(impet.miastaSter.options.fillColor);
 	inKolor.on('change', ustawionoKolor);
 	inKolor.prop('disabled', true);
 	$('#opacityMiast')
@@ -421,7 +421,7 @@ function wczytajPanelDolny() {
 			min: 0,
 			max: 1,
 			step: 0.01,
-			value: MiastaKontroler.options.fillOpacity,
+			value: impet.miastaSter.options.fillOpacity,
 			disabled: true
 		});
 	$('#opacityMiast')
@@ -429,12 +429,12 @@ function wczytajPanelDolny() {
 	chboxMiasta = $('#czyMiasta');
 	chboxMiasta.on('change', function (e) {
 		if (this.checked) {
-			MiastaKontroler.wyswietl(true);
+			impet.miastaSter.wyswietl(true);
 			inKolor.prop('disabled', false);
 			$('#opacityMiast')
 				.slider('enable');
 		} else {
-			MiastaKontroler.wyswietl(false);
+			impet.miastaSter.wyswietl(false);
 			inKolor.prop('disabled', true);
 			$('#opacityMiast')
 				.slider('disable');
@@ -474,7 +474,7 @@ function wczytajPanelDolny() {
 }
 
 function ustawionoKolor(e) {
-	MiastaKontroler.changeOptions({
+	impet.miastaSter.changeOptions({
 		fillColor: this.value
 	});
 }
@@ -507,7 +507,7 @@ FirmaBiezaca.prototype.zaladujFormatke = function () {
 	$('#inputFirma')
 		.val(this.firma.nazwa);
 	$('#inputMiejscowosc')
-		.val(Miasta[this.id].nazwa);
+		.val(impet.miasta[this.id].nazwa);
 };
 
 function ustawInterfejsObslugi() {
@@ -1098,48 +1098,52 @@ function initialize() {
 	//*****************************************************************************************************************************************
 	$(function () { //Iniciacja !!!!!
 		$.when(
-			$.getScript(serwer + '/ajax/miasta.php', function (data) {
-				MiastaKontroler = {
-					miasta: Miasta
-				};
-				MiastaKontroler.miastaId = [];
-				MiastaKontroler.miasta.forEach(function (ele, ind, tab) {
-					MiastaKontroler.miastaId[ele.id] = ele;
-				});
-				MiastaKontroler.wyswietl = function (czyWidoczne) {
-					MiastaKontroler.options.map = impet.map;
-					czyWidoczne = (czyWidoczne === false) ? false : true;
-					if (MiastaKontroler.miasta[0].cityCircle) {
-						MiastaKontroler.miasta.forEach(function (ele, ind, tab) {
-							ele.cityCircle.setVisible(czyWidoczne);
-						});
-						return;
-					}
-					var opt = Object.create(MiastaKontroler.options);
-					var length = MiastaKontroler.miasta.length;
-					for (var x = 0; x < length; x++) {
-						var miasto = MiastaKontroler.miasta[x];
-						opt.radius = Math.pow(miasto.ludnoscSuma, 0.5) * 10;
-						opt.center = new google.maps.LatLng(miasto.wspN, miasto.wspE);
-						miasto.cityCircle = new google.maps.Circle(opt);
-						miasto.cityCircle.opt = opt;
-					}
-				};
-				MiastaKontroler.options = {
+			$.get(serwer + '/ajax/ajaxuniversal4.php', {
+				table: 'PlMiejscowosci',
+				condition: 'id=id',
+				action: 'select',
+				data: 0
+			}, function (data) {
+				impet = impet || {};
+				impet.miasta = data;
+				var length = impet.miasta.length;
+				impet.miastaSter={};
+				impet.miastaSter.options = {
 					strokeColor: '#000',
 					strokeOpacity: 0.45,
 					fillColor: '#ff0000',
 					fillOpacity: 0.26,
 					visible: false,
-					clickable: true
-				};
-				MiastaKontroler.changeOptions = function (optio) {
-					if (!optio) {
-						optio = MiastaKontroler.options;
+					clickable: true,
+					map:impet.map
+				};impet.miastaId = [];
+				impet.miasta.forEach(function (ele, ind, tab) {
+					impet.miastaId[ele.id] = ele;
+				});
+				impet.miastaSter.wyswietl = function (czyWidoczne) {
+				impet.miastaSter.options.map = map;
+				impet.miastaSter.czyWidoczne = (czyWidoczne === false) ? false : true;
+						impet.miasta.forEach(function (ele, ind, tab) {
+							ele.cityCircle.setVisible(czyWidoczne);
+						});
+						return;
 					}
-					var length = MiastaKontroler.miasta.length;
+					var opt = Object.create(impet.miastaSter.options);
 					for (var x = 0; x < length; x++) {
-						MiastaKontroler.miasta[x].cityCircle.setOptions(optio);
+						var miasto = impet.miasta[x];
+						opt.radius = Math.pow(miasto.ludnoscSuma, 0.5) * 10;
+						opt.center = new google.maps.LatLng(miasto.wspN, miasto.wspE);
+						miasto.cityCircle = new google.maps.Circle(opt);
+						miasto.cityCircle.opt = opt;
+					}
+				
+				impet.miastaSter.changeOptions = function (optio) {
+					if (!optio) {
+						optio = impet.miastaSter.options;
+					}
+					var length = impet.miasta.length;
+					for (var x = 0; x < length; x++) {
+						impet.miasta[x].cityCircle.setOptions(optio);
 					}
 				};
 			}),
@@ -1182,7 +1186,7 @@ function initialize() {
 						FirmyImpet[x].ocena = -1;
 					if (FirmyImpet[x].priorytet === null)
 						FirmyImpet[x].priorytet = -1;
-					FirmyImpet[x].miejscowosc = MiastaKontroler.miastaId[FirmyImpet[x].miejscowoscId];
+					FirmyImpet[x].miejscowosc = impet.miastaId[FirmyImpet[x].miejscowoscId];
 				}
 				Firmy = FirmyImpet;
 				sterownik = firmySterownikSetup(impet.map, FirmyImpet);
@@ -1531,10 +1535,10 @@ function initialize() {
 
 		progressbar.progressbar({
 			value: false,
-			change: function() {
+			change: function () {
 				progressLabel.text(progressbar.progressbar("value") + "%");
 			},
-			complete: function() {
+			complete: function () {
 				progressLabel.text("Gotowe!");
 			}
 		});
@@ -1542,8 +1546,8 @@ function initialize() {
 		var lenPart = Math.floor(len / howManyParts);
 		var lenSmallerPart = len - lenPart * howManyParts;
 		for (var xx = 0; xx < howManyParts; xx++) {
-			(function(ileRazy) {
-				return setTimeout(function() {
+			(function (ileRazy) {
+				return setTimeout(function () {
 					console.log('aha');
 					progressbar.progressbar("value", (ileRazy + 1) * 100 / howManyParts);
 					if (ileRazy == howManyParts - 2) {
@@ -1557,7 +1561,7 @@ function initialize() {
 
 			})(xx);
 		}
-		setTimeout(function() {
+		setTimeout(function () {
 			for (var x = howManyParts * lenPart; x < howManyParts * lenPart + lenSmallerPart; x++) {
 				window.sterownik.id[rekordy[x].id] = new Firma(rekordy[x], sterownik, impet.map);
 				window.sterownik = sterownik;
@@ -1567,10 +1571,10 @@ function initialize() {
 
 		function dalej() {
 			console.timeEnd('rekordy');
-			sterownik.id.forEach(function(el, ind) {
+			sterownik.id.forEach(function (el, ind) {
 				projekcjaNaSiatke(el);
 			});
-			impet.map.addListener('zoom_changed', function(e) {
+			impet.map.addListener('zoom_changed', function (e) {
 				return;
 			});
 			sterownik.uzytkownik = impet.users[4];
@@ -1581,65 +1585,65 @@ function initialize() {
 	}
 }
 
-		google.impet = {};
-		google.impet.Trasy = function (opt) {
-			if (typeof (opt) === 'undefined') {
-				opt = {};
-			}
-			opt['od'] = opt['od'] || {
-				rok: 2013,
-				miesiac: 1
-			};
-			opt['do'] = opt['do'] || {
-				rok: (new Date)
-					.getYear() + 1900,
-				miesiac: (new Date)
-					.getMonth()
-			}
-			//   console.dir(opt);
-			var tmp = opt['od'];
-			tmp['date'] = new Date(Date.UTC(tmp.rok, tmp.miesiac));
-			var tmp = opt['do'];
-			tmp['date'] = new Date(Date.UTC(tmp.rok, tmp.miesiac + 1));
-			this.od = opt.od;
-			this.do = opt.do;
-		}
+google.impet = {};
+google.impet.Trasy = function (opt) {
+	if (typeof (opt) === 'undefined') {
+		opt = {};
+	}
+	opt['od'] = opt['od'] || {
+		rok: 2013,
+		miesiac: 1
+	};
+	opt['do'] = opt['do'] || {
+		rok: (new Date)
+			.getYear() + 1900,
+		miesiac: (new Date)
+			.getMonth()
+	}
+	//   console.dir(opt);
+	var tmp = opt['od'];
+	tmp['date'] = new Date(Date.UTC(tmp.rok, tmp.miesiac));
+	var tmp = opt['do'];
+	tmp['date'] = new Date(Date.UTC(tmp.rok, tmp.miesiac + 1));
+	this.od = opt.od;
+	this.do = opt.do;
+}
 
-		function codeAddress() {
-			var address = document.getElementById('address')
-				.value;
-			geocoder.geocode({
-				'address': address
-			}, function (results, status) {
-				if (status === google.maps.GeocoderStatus.OK) {
-					var loc = results[0].geometry.location;
-					impet.map.setCenter(loc);
-					markerGeocoder.setPosition(loc);
-					markerGeocoder.setVisible(true);
-					$('#address')
-						.val(loc.lat()
-							.toFixed(6) + ', ' + loc.lng()
-							.toFixed(6));
-					if (results[0]) {
-						markerGeocoder.infoWin.setContent('<div><h4>' + results[0].formatted_address + '</h4></div>');
-						markerGeocoder.infoWin.open(impet.map, markerGeocoder);
-					}
-				} else {
-					alert('Odszukanie nie powiodłow!' + status);
-				}
-			});
-		}
-		google.maps.Polyline.prototype.getBounds = function () {
-			var latlngBounds = new google.maps.LatLngBounds();
-			for (var x = 0; x < this.latLngs.j.length; x++) {
-				var path = this.latLngs.j[x];
-
-				for (var i = 0; i < path.getLength(); i++) {
-					latlngBounds.extend(path.getAt(i));
-				}
+function codeAddress() {
+	var address = document.getElementById('address')
+		.value;
+	geocoder.geocode({
+		'address': address
+	}, function (results, status) {
+		if (status === google.maps.GeocoderStatus.OK) {
+			var loc = results[0].geometry.location;
+			impet.map.setCenter(loc);
+			markerGeocoder.setPosition(loc);
+			markerGeocoder.setVisible(true);
+			$('#address')
+				.val(loc.lat()
+					.toFixed(6) + ', ' + loc.lng()
+					.toFixed(6));
+			if (results[0]) {
+				markerGeocoder.infoWin.setContent('<div><h4>' + results[0].formatted_address + '</h4></div>');
+				markerGeocoder.infoWin.open(impet.map, markerGeocoder);
 			}
-			return latlngBounds;
+		} else {
+			alert('Odszukanie nie powiodłow!' + status);
 		}
+	});
+}
+google.maps.Polyline.prototype.getBounds = function () {
+	var latlngBounds = new google.maps.LatLngBounds();
+	for (var x = 0; x < this.latLngs.j.length; x++) {
+		var path = this.latLngs.j[x];
+
+		for (var i = 0; i < path.getLength(); i++) {
+			latlngBounds.extend(path.getAt(i));
+		}
+	}
+	return latlngBounds;
+}
 google.impet = {};
 google.impet.Trasy = function (opt) {
 	if (typeof (opt) === 'undefined') {

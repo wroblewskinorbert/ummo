@@ -15,7 +15,7 @@
 
 	You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+var impet;
 $('#miastaSchowac').on('mouseover', function() {
     impet.firmaEdycja.dialog('open')
 });
@@ -65,7 +65,7 @@ setTimeout(function() {
     	'<p style="padding: 15px;"><button onclick="impet.firmaEdycja.getFB();" id="anulujEdycje">Anuluj</button> '+
     	'<button onclick="fzapiszEdycje()" id="zapiszEdycje">Zapisz</button></div></p>';
     var firmyEdycja = $("<div id='dialogFirmyEdycja'></div>").appendTo(document.body).html(formularzFirma);
-    Miasta.forEach(function(ele, ind) {
+    impet.miasta.forEach(function(ele, ind) {
         $('#miejscowoscIdSelect').append($('<option value="' + ele.id + '">' + ele.nazwa + '</option>'))
     })
     fb = impet.fb;
@@ -83,7 +83,7 @@ setTimeout(function() {
         $('#wspN').val(impet.fb.wspN);
         $('#wspE').val(impet.fb.wspE);
         $('#uwagi').html(impet.fb.uwagi);
-        $('#address').val(MiastaKontroler.miastaId[impet.fb.miejscowoscId].nazwa+' '+impet.fb.ulica);
+        $('#address').val(impet.miasta.miastaId[impet.fb.miejscowoscId].nazwa+' '+impet.fb.ulica);
     }
     firmyEdycja.dialog({
         minWidth: 400,
