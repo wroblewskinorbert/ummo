@@ -1,4 +1,4 @@
-<?php header( "Content-type: text/html; charset=UTF-8"); header( 'Access-Control-Allow-Origin: http://localhost'); ?>
+<?php header( "Content-type: text/html; charset=UTF-8"); header( 'Access-Control-Allow-Origin: http://localhost http://localhost'); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,11 +30,6 @@
 			<button id='buttonTrasy' onclick="impet.zacznijZaznaczanie()">
 				T
 			</button>
-<!--
-			<div id="trasaOpis2" style="position:fixed; padding: 5px 2px 2px 2px; top:0px; height:55px; width:inherit; background-color: #dddddd; z-index: 3;">
-				Trasa:
-			</div>
--->
 			<div id="mapCanvas">
 			</div>
 		</div>
@@ -51,7 +46,7 @@
 	</div>
 	<div id="panel-gorny-container2">
 		<div>
-			 <?php include "panelfirmy.php" ?>
+			<?php include "panelfirmy.php" ?>
 			<button id="button-panel-gorny2">
 				Zwiń
 			</button>
@@ -59,7 +54,6 @@
 	</div>
 
 	<div id="panel-gorny-container">
-
 		<div id="panel-gorny">
 			<form name="przelaczniki" id=przelaczniki>
 				<fieldset name="fieldDlaPrzelacznikow">
@@ -89,7 +83,6 @@
 			<div>
 				<input type="text" oninput="" id="search-string_0">
 				<input type="button" onclick="" value="Szukaj">
-
 				<br>
 			</div>
 			<div id='ustawieniaMiast'>
@@ -128,6 +121,28 @@
 	<script src="./js/imp.js" type="text/javascript"></script>
 	<script src="./js/dodatki.js" type="text/javascript"></script>
 	<script defer src="./js/contextMenu.js"></script>
+
+	<div id="progressbar">
+		<div class="progress-label">Wczytuje...</div>
+	</div>
+	<!--
+	<ul id="menu">
+  <li><span class="ui-icon ui-icon-disk"></span>Save</li>
+  <li><span class="ui-icon ui-icon-zoomin"></span>Zoom In</li>
+  <li><span class="ui-icon ui-icon-zoomout"></span>Zoom Out</li>
+  <li class="ui-state-disabled"><span class="ui-icon ui-icon-print"></span>Print...</li>
+  <li>
+    Playback
+    <ul>
+      <li><span class="ui-icon ui-icon-seek-start"></span>Prev</li>
+      <li><span class="ui-icon ui-icon-stop"></span>Stop</li>
+      <li><span class="ui-icon ui-icon-play"></span>Play</li>
+      <li><span class="ui-icon ui-icon-seek-end"></span>Next</li>
+    </ul>
+  </li>
+  <li>Learn more about this menu</li>
+</ul>	
+-->
 </body>
 </html>
 

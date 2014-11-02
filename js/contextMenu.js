@@ -16,9 +16,6 @@
 	You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-$('#miastaSchowac').on('mouseover', function() {
-    impet.firmaEdycja.dialog('open')
-});
 function fzapiszEdycje() {
     var tmpId, tabId;
     var elementToSave = {};
@@ -44,7 +41,7 @@ function edytujJuz(){
 	impet.firmaEdycja.dialog('open');impet.firmaEdycja.getFB();
 }
 
-setTimeout(function() {
+
     var wiersz = function(x, tekst, typeOfInput) {
         var typeOfInput = typeOfInput || "text";
         return '<label for="' + x + '">' + tekst + '</label><input style="width:100%;" type="' + typeOfInput + '" id="' + x + '" /><br />'
@@ -65,6 +62,7 @@ setTimeout(function() {
     var firmyEdycja = $("<div id='dialogFirmyEdycja'></div>").appendTo(document.body).html(formularzFirma);
     Miasta.forEach(function(ele, ind) {
         $('#miejscowoscIdSelect').append($('<option value="' + ele.id + '">' + ele.nazwa + '</option>'))
+		inicjuj();// inicjuje okregi na miastach wzgledem ludnosci
     })
     fb = impet.fb;
     
@@ -103,7 +101,7 @@ setTimeout(function() {
         this.menuItems_ = options.menuItems || [];
         this.pixelOffset = options.pixelOffset || new google.maps.Point(10, -5);
     }
-    
+    function inicjuj(){
     ContextMenu.prototype = new google.maps.OverlayView();
     
     ContextMenu.prototype.draw = function() {
@@ -475,4 +473,4 @@ setTimeout(function() {
     // 		}
     });
 
-}, 7000);
+}

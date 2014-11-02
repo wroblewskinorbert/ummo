@@ -3,18 +3,15 @@ var sterownik, google, MiastaKontroler, Miasta;
 impet.draw = false;
 impet.debug = true;
 impet.initialization = true;
-
-
-var panoramaOptions, map, panorama, geocoder, infoWindow, mapDiv, markerGeocoder, directionsDisplay, directionsService;
+var panoramaOptions, map, panorama, geocoder, infoWindow, mapDiv, markerGeocoder, directionsDisplay, directionsService, markeryNazwa;
 var nastepny, poprzedni, zapisz;
 var trasy;
 var firmaBiezaca = {};
-
+var zwrocWZakresie, display;
 var serwer = 'http://192.168.2.220/'; //'http://localhost'; // document.location.origin;
 //var serwer = 'http://213.92.139.215'; //'http://localhost'; // document.location.origin;
 var serwer = 'http://localhost'; // document.location.origin;
 var dbo = {};
-
 var markeryNazwaZoom = 12;
 window.markeryNazwa = {
 	wyswietlone: {},
@@ -37,7 +34,6 @@ window.markeryNazwa = {
 				that.odrzuconeHard.push(punkt);
 				if (punkt.marker.getVisible())
 					punkt.marker.setVisible(false);
-
 			} else {
 				that.doWyswietlenia.push(punkt);
 				if (!punkt.marker.getVisible())
@@ -46,7 +42,6 @@ window.markeryNazwa = {
 			if (display.zoom < 12) {
 				if (punkt.markerNazwa.getVisible()) {
 					punkt.markerNazwa.setVisible(false);
-
 				}
 			} else {
 				if (display.zoom == 13) {
@@ -61,13 +56,10 @@ window.markeryNazwa = {
 				if (punkt.mvc.visible != punkt.markerNazwa.getVisible()) {
 					punkt.markerNazwa.setVisible(!punkt.markerNazwa.getVisible());
 				}
-
 			}
-
 		}
 		console.timeEnd('draw');
 	}
-
 };
 
 function translatePosition(position) {
@@ -130,10 +122,8 @@ function wyczyscWszystkie() {
 	punkty.forEach(function (ele) {
 		ele.marker.set('visible', false);
 		ele.marker.set('visible', false);
-
 	})
 }
-
 $.getScript(serwer + '/ajax/ajaxuniversal2.php?table=ImpetPracownicy&action=select&condition=id%3did&data=0', function (data) {
 	var kto = $('<select id="wyborPracownika"></select>')
 	impet.users = [];
@@ -147,24 +137,22 @@ $.getScript(serwer + '/ajax/ajaxuniversal2.php?table=ImpetPracownicy&action=sele
 	$('#panel')
 		.append(kto);
 	kto.change(function (e) {
-//******************************************************* zmiana uzytkownika		
-		impet.user= this.value;
-		localStorage['impetSettingsLastUser']=impet.user;
+		//******************************************************* zmiana uzytkownika
+		impet.user = this.value;
+		localStorage['impetSettingsLastUser'] = impet.user;
 	})
 	console.log('Pracwonicny wczytani');
 });
-
 display = function () {
 	window.lastUser = localStorage['impetSettingsLastUser'];
 	impet.user = lastUser ? lastUser : 4;
 	$('#wyborPracownika').get(0).value = impet.user;
 	display.wczytajIUstawUstawienia();
 	//display.odczytajIZapiszUstawienie();
-	setTimeout(function(){
+	setTimeout(function () {
 		delete impet.initialization;
 	}, 15000)
 	map.addListener('zoom_changed', function (e) {
-	//	if(impet.initialization) return;
 		display.prevZoom = display.zoom;
 		display.zoom = map.getZoom();
 		display.zoomChanged = true;
@@ -173,14 +161,12 @@ display = function () {
 		display.odczytajIZapiszUstawienie();
 	})
 	map.addListener('bounds_changed', mapaZmienilaObszar);
-
 }
-
 display.wczytajIUstawUstawienia = function () {
 	var settingsLoaded = $.parseJSON(localStorage.getItem('impetSet' + impet.user)) || {};
 	$('input[store]').each(function (ind, ele) {
 		if (ele.type == 'checkbox') {
-			ele.checked = settingsLoaded[ele.id] || ele.defaultChecked;
+			ele.checked = (settingsLoaded[ele.id] == undefined) ? ele.defaultChecked : settingsLoaded[ele.id];
 		} else {
 			ele.value = settingsLoaded[ele.id] || ele.defaultValue;
 			$('#val' + ele.id).html(ele.value);
@@ -194,7 +180,6 @@ display.wczytajIUstawUstawienia = function () {
 	map.setCenter(display.center);
 	display.zoom = display.settings['zoom'];
 	map.setZoom(display.zoom);
-	
 }
 display.odczytajIZapiszUstawienie = function () {
 	impet.user = $('#wyborPracownika').get(0).value;
@@ -210,12 +195,10 @@ display.odczytajIZapiszUstawienie = function () {
 	if (impet.initialization) return;
 	localStorage['impetSet' + impet.user] = JSON.stringify(sett);
 }
-
 display.default = {
 	zoom: 7,
 	centerLat: 49,
 	centerLng: 22
-
 }
 
 function mapaZmienilaObszar() {
@@ -225,14 +208,11 @@ function mapaZmienilaObszar() {
 	display.settings['centerLng'] = display.center.lng();
 	display.bounds = map.getBounds();
 	display.odczytajIZapiszUstawienie();
-	display.wczytajIUstawUstawienia();
+	//	display.wczytajIUstawUstawienia();
 	markeryNazwa.draw();
-
 }
-
 $('body').on('change', 'input[store]', function (e) {
 	display.odczytajIZapiszUstawienie();
-	display.wczytajIUstawUstawienia();
 	switch (this.id) {
 	case "ogranicznikWielkosci":
 	case "wszyscy":
@@ -242,14 +222,14 @@ $('body').on('change', 'input[store]', function (e) {
 			sterownik.id.forEach(function (el) {
 				el.marker.set('icon', el.icon);
 			})
+			//		markeryNazwa.draw();
 			break;
-
 		}
 	}
+	display.wczytajIUstawUstawienia();
 	//wyczyscWszystkie();
 	markeryNazwa.draw();
 })
-
 
 function dp(that, property, opt) {
 	var prop = {};
@@ -289,7 +269,6 @@ function Drogi(route) {
 		this.drogi.push(droga);
 		this.dystans += droga.dystans;
 		this.czas += droga.czas;
-
 	}
 }
 
@@ -303,7 +282,6 @@ function TrasaShow(punkty) {
 	});
 	this.wyznaczOdcinkiNew();
 	this.path = [];
-
 }
 TrasaShow.prototype.wyznaczOdcinkiNew = function () {
 	var paths = this.poly.latLngs;
@@ -315,7 +293,6 @@ TrasaShow.prototype.wyznaczOdcinkiNew = function () {
 			this.TwoPointsToWay(this.punkty[x], this.punkty[x + 1])
 		}
 		paths.setAt(x, (this.punkty[x].firma.odcinki[this.punkty[x + 1].firma.key]));
-
 	}
 }
 TrasaShow.prototype.TwoPointsToWay = function (fromPoint, toPoint, reply) {
@@ -420,8 +397,6 @@ function miastaOpacity(event, ui) {
 var inKolor, chboxMiasta, Firmy, Markero, Trasy, TrasyClass;
 
 function wczytajPanelDolny() {
-	//   $.get('panelDolny.html', function (data) {
-	//      $('#panelDolny').html(data);
 	inKolor = $('#colorMiast');
 	inKolor.val(MiastaKontroler.options.fillColor);
 	inKolor.on('change', ustawionoKolor);
@@ -450,20 +425,9 @@ function wczytajPanelDolny() {
 			$('#opacityMiast')
 				.slider('disable');
 		}
-		//	MiastaKontroler
-
-
-
 		google.maps.event.trigger(impet.map, 'bounds_changed');
 	});
 
-	//	chbockCzyNasi = $('#wszyscy')
-	//		.on('change', function (e) {
-	//			sterownik.czyWyswietlaWszystkich = this.checked;
-	//			sterownik.MarkeryDraw(true);
-	//			sterownik.MarkeryDraw();
-	//			google.maps.event.trigger(impet.map, 'bounds_changed');
-	//		});
 	$('#uchwytPanelDolny')
 		.draggable({
 			axis: 'y',
@@ -494,7 +458,6 @@ function wczytajPanelDolny() {
 	//	sterownik.MarkeryDraw(true);
 	//	sterownik.MarkeryDraw();
 	google.maps.event.trigger(impet.map, 'bounds_changed');
-
 }
 
 function ustawionoKolor(e) {
@@ -535,7 +498,6 @@ FirmaBiezaca.prototype.zaladujFormatke = function () {
 };
 
 function ustawInterfejsObslugi() {
-
 	$('#panelLewyHandler')
 		.draggable({
 			axis: 'x',
@@ -643,7 +605,6 @@ function initialize() {
 						poly.color = 'red';
 						poly.weight = 6;
 					}
-
 				});
 			$("#selectable")
 				.on('mouseleave', 'li', function (e) {
@@ -655,7 +616,6 @@ function initialize() {
 						var poly = trasy.trasyId[trasaId].drogaNaMapie.poly;
 						poly.restoreState();
 					}
-
 				});
 			$("#selectable")
 				.selectable({
@@ -692,7 +652,6 @@ function initialize() {
 				}, {
 					duration: 1500
 				});
-
 		};
 		TrasyClass.prototype.wczytajIWyswietl = function () {
 			var that = this;
@@ -740,7 +699,6 @@ function initialize() {
 			panel.przelacz(false);
 			this.trasa.pokaz();
 			this.trasa.edytuj();
-
 		};
 
 		function Trasa(trasa) {
@@ -750,7 +708,6 @@ function initialize() {
 			this.setValues(trasa);
 			this.pokaz();
 		}
-
 		Trasa.prototype = new google.maps.MVCArray();
 		Trasa.prototype.constructor = Trasa;
 		Trasa.prototype.wczytajPunkty = function (callback) {
@@ -806,7 +763,6 @@ function initialize() {
 					el.marker.setIcon(Markero.icon(0.8, '#' + el.kto.kolor.slice(0, 3), ind + 1));
 					el.marker.notify('icon');
 					el.marker.bindTo('position', el.firma.mvc);
-
 				}
 				el.marker.setVisible(czyPokazac);
 			});
@@ -851,7 +807,6 @@ function initialize() {
 			}
 			this.drogaNaMapie.wyznaczOdcinkiNew(this.getArray());
 			this.edytuj();
-
 		};
 		Trasa.prototype.listaHTML = function () {
 			var that = this;
@@ -904,11 +859,8 @@ function initialize() {
 				return kolor
 			}
 		})();
-
-
 		Trasa.prototype.edytuj = function () {
 			var that = this;
-
 			Trasa.prevIndex = 1
 			panelTrasa.html(this.listaHTML());
 			var sort = $('#selectable2')
@@ -1065,7 +1017,6 @@ function initialize() {
 				panel.przyciagaj = !panel.przyciagaj;
 			}
 		})
-
 		panelTrasy.on('contextmenu', 'li', function (e) {
 			$('#trasaOpis')
 				.removeClass('ui-effects-transfer');
@@ -1154,7 +1105,7 @@ function initialize() {
 	//	});
 
 
-
+	//*****************************************************************************************************************************************
 	$(function () { //Iniciacja !!!!!
 		$.when(
 			$.getScript(serwer + '/ajax/miasta.php', function (data) {
@@ -1192,7 +1143,6 @@ function initialize() {
 					visible: true,
 					clickable: true
 				};
-
 				MiastaKontroler.changeOptions = function (optio) {
 					if (!optio) {
 						optio = MiastaKontroler.options;
@@ -1247,8 +1197,6 @@ function initialize() {
 				Firmy = FirmyImpet;
 				sterownik = firmySterownikSetup(impet.map, FirmyImpet);
 				// domyslnym uzytkownikiem jestem
-				sterownik.uzytkownik = impet.users[4];
-				wczytajPanelDolny();
 			});
 		directionsService = new google.maps.DirectionsService();
 		directionsService.ile = 0;
@@ -1318,9 +1266,7 @@ function initialize() {
 		trasy.wczytajIWyswietl();
 		//impet.ster.handleInputs();
 		google.maps.event.trigger(impet.map, 'bounds_changed');
-
 	});
-
 	impet.zacznijZaznaczanie = function () {
 		$('#panelLewyTrasa li')
 			.removeClass('start stop');
@@ -1411,7 +1357,6 @@ function initialize() {
 				dp(that, x, prop);
 			})(x, this);
 		}
-
 		this.mvc.set('position', new google.maps.LatLng(this.rekord.wspN, this.rekord.wspE));
 		dp(this, 'position', {
 			set: function (val) {
@@ -1471,7 +1416,6 @@ function initialize() {
 					if (firma.www == null) firma.www = "";
 					if (firma.od == null) firma.od = "";
 					if (firma.do == null) firma.do = "";
-
 					content = content.replace("{{nazwa}}", firma.nazwa);
 					content = content.replace("{{ulica}}", firma.ulica);
 					content = content.replace("{{miejscowosc}}", firma.kod + "  " + firma.miejscowosc.nazwa);
@@ -1507,7 +1451,6 @@ function initialize() {
 					}
 				})
 	}
-
 	dp(Firma.prototype, 'icon', {
 		get: function () {
 			var size = 0.4,
@@ -1619,7 +1562,6 @@ function initialize() {
 			return color;
 		}
 	});
-
 	dp(Firma.prototype, 'inView', {
 		get: function () {
 			return impet.map.getBounds()
@@ -1629,66 +1571,66 @@ function initialize() {
 
 	function firmySterownikSetup(map, rekordy) {
 		var sterownik = {
-
 			id: [],
 			rekordy: rekordy,
 			map: map,
-
 		};
 		var len = rekordy.length;
-		for (var x = 0; x < len; x++) {
-			sterownik.id[rekordy[x].id] = new Firma(rekordy[x], sterownik, impet.map);
-		}
+		console.time('rekordy')
+		var progressbar = $("#progressbar"),
+			progressLabel = $(".progress-label");
 
-		sterownik.id.forEach(function (el, ind) {
-			projekcjaNaSiatke(el);
-		});
-
-		impet.map.addListener('zoom_changed', function (e) {
-			return;
-		});
-		return sterownik;
-	}
-
-	function codeAddress() {
-		var address = document.getElementById('address')
-			.value;
-		geocoder.geocode({
-			'address': address
-		}, function (results, status) {
-			if (status === google.maps.GeocoderStatus.OK) {
-				var loc = results[0].geometry.location;
-				impet.map.setCenter(loc);
-				markerGeocoder.setPosition(loc);
-				markerGeocoder.setVisible(true);
-				$('#address')
-					.val(loc.lat()
-						.toFixed(6) + ', ' + loc.lng()
-						.toFixed(6));
-				if (results[0]) {
-					markerGeocoder.infoWin.setContent('<div><h4>' + results[0].formatted_address + '</h4></div>');
-					markerGeocoder.infoWin.open(impet.map, markerGeocoder);
-				}
-			} else {
-				alert('Odszukanie nie powiodłow!' + status);
+		progressbar.progressbar({
+			value: false,
+			change: function () {
+				progressLabel.text(progressbar.progressbar("value") + "%");
+			},
+			complete: function () {
+				progressLabel.text("Gotowe!");
 			}
 		});
-	}
-	google.maps.Polyline.prototype.getBounds = function () {
-		var latlngBounds = new google.maps.LatLngBounds();
-		for (var x = 0; x < this.latLngs.j.length; x++) {
-			var path = this.latLngs.j[x];
+		var lenPart = Math.floor(len / 10);
+		var lenSmallerPart = len - lenPart * 10;
+		for (var xx = 0; xx < 10; xx++) {
+			(function (ileRazy) {
+				return setTimeout(function () {
+					console.log('aha');
+					progressbar.progressbar("value", (ileRazy + 1) * 10);
+					if (ileRazy == 8) {
+						progressbar.fadeOut(1500);
+					}
+					for (var x = lenPart * ileRazy; x < (ileRazy + 1) * lenPart; x++) {
+						sterownik.id[rekordy[x].id] = new Firma(rekordy[x], sterownik, impet.map);
+						window.sterownik = sterownik;
+						//		debugger;
+						//	console.log('aha')
+					}
+				}, 1200 * ileRazy)
 
-			for (var i = 0; i < path.getLength(); i++) {
-				latlngBounds.extend(path.getAt(i));
-			}
+			})(xx);
 		}
-		return latlngBounds;
-	}
-		display();
+		setTimeout(function () {
+			for (var x = 10 * lenPart; x < 10 * lenPart + lenSmallerPart; x++) {
+				window.sterownik.id[rekordy[x].id] = new Firma(rekordy[x], sterownik, impet.map);
+				window.sterownik = sterownik;
+			}
 
-	
-}
+			dalej();
+		}, 13000);
+
+		function dalej() {
+			console.timeEnd('rekordy');
+			sterownik.id.forEach(function (el, ind) {
+				projekcjaNaSiatke(el);
+			});
+
+			impet.map.addListener('zoom_changed', function (e) {
+				return;
+			});
+			sterownik.uzytkownik = impet.users[4];
+			wczytajPanelDolny();
+			return sterownik;
+		}
 google.impet = {};
 google.impet.Trasy = function (opt) {
 	if (typeof (opt) === 'undefined') {
@@ -1716,6 +1658,74 @@ google.impet.Trasy = function (opt) {
 
 }
 
+
+
+function codeAddress() {
+	var address = document.getElementById('address')
+		.value;
+	geocoder.geocode({
+		'address': address
+	}, function (results, status) {
+		if (status === google.maps.GeocoderStatus.OK) {
+			var loc = results[0].geometry.location;
+			impet.map.setCenter(loc);
+			markerGeocoder.setPosition(loc);
+			markerGeocoder.setVisible(true);
+			$('#address')
+				.val(loc.lat()
+					.toFixed(6) + ', ' + loc.lng()
+					.toFixed(6));
+			if (results[0]) {
+				markerGeocoder.infoWin.setContent('<div><h4>' + results[0].formatted_address + '</h4></div>');
+				markerGeocoder.infoWin.open(impet.map, markerGeocoder);
+			}
+		} else {
+			alert('Odszukanie nie powiodłow!' + status);
+		}
+	});
+}
+google.maps.Polyline.prototype.getBounds = function () {
+	var latlngBounds = new google.maps.LatLngBounds();
+	for (var x = 0; x < this.latLngs.j.length; x++) {
+		var path = this.latLngs.j[x];
+
+		for (var i = 0; i < path.getLength(); i++) {
+			latlngBounds.extend(path.getAt(i));
+		}
+	}
+	return latlngBounds;
+}
+display();
+}
+}
+
+
+google.impet = {};
+google.impet.Trasy = function (opt) {
+	if (typeof (opt) === 'undefined') {
+		opt = {};
+	}
+	opt['od'] = opt['od'] || {
+		rok: 2013,
+		miesiac: 1
+	};
+	opt['do'] = opt['do'] || {
+		rok: (new Date)
+			.getYear() + 1900,
+		miesiac: (new Date)
+			.getMonth()
+	}
+	//   console.dir(opt);
+	var tmp = opt['od'];
+	tmp['date'] = new Date(Date.UTC(tmp.rok, tmp.miesiac));
+	var tmp = opt['do'];
+	tmp['date'] = new Date(Date.UTC(tmp.rok, tmp.miesiac + 1));
+	this.od = opt.od;
+	this.do = opt.do;
+
+
+
+}
 google.impet.Trasy.prototype.wczytaj = function () {
 	var that = this;
 	var con = 'kiedy between CONVERT(DATETIME, \'' + this.od.date.toISOString()
@@ -1735,12 +1745,10 @@ google.impet.Trasy.prototype.wczytaj = function () {
 		}
 	});
 };
-
 google.impet.Trasy.prototype.setDisplay = function (display) {
 	this.display = display;
 
 }
-
 //T = google.impet.Trasy;
 //a = new T;
 //a.wczytaj();
@@ -1749,19 +1757,6 @@ var infoWin = new google.maps.InfoWindow({
 	map: impet.map
 })
 google.maps.event.addDomListener(window, 'load', initialize);
-
-
-/*
- * Extended API for Google Maps v3
- *
- * by José Fernando Calcerrada.
- *
- * Licensed under the GPL licenses:
- * http://www.gnu.org/licenses/gpl.html
- *
- */
-
-// LatLng
 /******************************************************************************/
 google.maps.LatLng.prototype.distanceFrom = function (latlng) {
 	var lat = [this.lat(), latlng.lat()]
@@ -1907,9 +1902,15 @@ google.maps.Polyline.prototype.setVertex = function (i, latlng) {
 google.maps.Polyline.prototype.setVisible = function (visible) {
 	if (visible === true && !this.getVisible()) {
 		this.setMap(this.lastMap);
-
 	} else if (visible === false && this.getVisible()) {
 		this.lastMap = this.getMap();
 		this.setMap(null);
 	}
 }
+var a = $('<dvi id="formularz")></div>');
+$.load("./firma.html").done(function (data) {
+	a.html(data)
+});
+var b = a.prependTo(document.body)[0];
+
+dir(b);

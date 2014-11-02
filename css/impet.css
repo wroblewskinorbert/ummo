@@ -2,7 +2,7 @@
 /* CSS Document */
 * {
     box-sizing: border-box;
-	
+
 }
 
 .street-image, html, body, #mapCanvas {
@@ -220,7 +220,7 @@ outline: red 2px dotted;
 	font-weight:bolder;
 }
 
-#obsluga {
+#obsluga, #divObsluga {
 	 width: 160px;
 	 float: right;
 	 height: 93%;
@@ -367,4 +367,29 @@ button#edycjaFirmyButton {
 
 div#divObsluga {
     width: 160px;  float: right;
+}
+
+
+ .ui-progressbar {
+    position: fixed;
+	 top:1px;
+	 left:auto;
+	 right: auto;
+	 width:300px;
+	 height: 50px;
+  
+    z-index: 3000;
+}
+  .progress-label {
+    position: absolute;
+    left: 50%;
+    top: 4px;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #fff;
+  }
+
+ul#menu {
+    position: fixed;
+    top: 200px;
+    left: 336px;
 }
