@@ -3,15 +3,20 @@ var sterownik, google, MiastaKontroler, Miasta;
 impet.draw = false;
 impet.debug = true;
 impet.initialization = true;
+
+
 var panoramaOptions, map, panorama, geocoder, infoWindow, mapDiv, markerGeocoder, directionsDisplay, directionsService, markeryNazwa;
 var nastepny, poprzedni, zapisz;
 var trasy;
 var firmaBiezaca = {};
+
 var zwrocWZakresie, display;
+
 var serwer = 'http://192.168.2.220/'; //'http://localhost'; // document.location.origin;
 //var serwer = 'http://213.92.139.215'; //'http://localhost'; // document.location.origin;
 var serwer = 'http://localhost'; // document.location.origin;
 var dbo = {};
+
 var markeryNazwaZoom = 12;
 window.markeryNazwa = {
 	wyswietlone: [],
@@ -52,10 +57,12 @@ window.markeryNazwa = {
 					punkt.markerNazwa.setVisible(true);
 				}
 				punkt.painted = true;
+
 			}
 			if (display.zoom < 12) {
 				if (punkt.markerNazwa.getVisible()) {
 					punkt.markerNazwa.setVisible(false);
+
 				}
 			} else {
 				if (display.zoomChanged) {
@@ -74,9 +81,11 @@ window.markeryNazwa = {
 					punkt.markerNazwa.setVisible(!punkt.markerNazwa.getVisible());
 				}
 			}
+
 		}
 		console.timeEnd('draw');
 	}
+
 };
 
 function translatePosition(position) {
@@ -139,8 +148,10 @@ function wyczyscWszystkie() {
 	punkty.forEach(function (ele) {
 		ele.marker.set('visible', false);
 		ele.marker.set('visible', false);
+
 	})
 }
+
 $.getScript(serwer + '/ajax/ajaxuniversal2.php?table=ImpetPracownicy&action=select&condition=id%3did&data=0', function (data) {
 	var kto = $('<select id="wyborPracownika"></select>')
 	impet.users = [];
@@ -160,10 +171,13 @@ $.getScript(serwer + '/ajax/ajaxuniversal2.php?table=ImpetPracownicy&action=sele
 	})
 	console.log('Pracwonicny wczytani');
 });
+
 display = function () {
 	window.lastUser = localStorage['impetSettingsLastUser'];
 	impet.user = lastUser ? lastUser : 4;
-	$('#wyborPracownika').get(0).value = impet.user;
+	$('#wyborPracownika')
+		.get(0)
+		.value = impet.user;
 	display.wczytajIUstawUstawienia();
 	//display.odczytajIZapiszUstawienie();
 	setTimeout(function () {
@@ -173,22 +187,27 @@ display = function () {
 		display.prevZoom = display.zoom;
 		display.zoom = map.getZoom();
 		display.zoomChanged = true;
-		$('span#zoomText').html(display.zoom);
+		$('span#zoomText')
+			.html(display.zoom);
 		display.settings.zoom = display.zoom;
 		display.odczytajIZapiszUstawienie();
 	})
 	map.addListener('bounds_changed', mapaZmienilaObszar);
+
 }
+
 display.wczytajIUstawUstawienia = function () {
 	var settingsLoaded = $.parseJSON(localStorage.getItem('impetSet' + impet.user)) || {};
-	$('input[store]').each(function (ind, ele) {
-		if (ele.type == 'checkbox') {
-			ele.checked = (settingsLoaded[ele.id] == undefined) ? ele.defaultChecked : settingsLoaded[ele.id];
-		} else {
-			ele.value = settingsLoaded[ele.id] || ele.defaultValue;
-			$('#val' + ele.id).html(ele.value);
-		}
-	});
+	$('input[store]')
+		.each(function (ind, ele) {
+			if (ele.type == 'checkbox') {
+				ele.checked = (settingsLoaded[ele.id] == undefined) ? ele.defaultChecked : settingsLoaded[ele.id];
+			} else {
+				ele.value = settingsLoaded[ele.id] || ele.defaultValue;
+				$('#val' + ele.id)
+					.html(ele.value);
+			}
+		});
 	display.settings = $.extend({}, display.default, settingsLoaded);
 	display.center = new google.maps.LatLng(
 		display.settings['centerLat'],
@@ -197,25 +216,31 @@ display.wczytajIUstawUstawienia = function () {
 	map.setCenter(display.center);
 	display.zoom = display.settings['zoom'];
 	map.setZoom(display.zoom);
+
 }
 display.odczytajIZapiszUstawienie = function () {
-	impet.user = $('#wyborPracownika').get(0).value;
+	impet.user = $('#wyborPracownika')
+		.get(0)
+		.value;
 	localStorage['impetSettingsLastUser'] = impet.user;
 	var sett = display.settings; // {};
-	$('input[store]').each(function (ind, ele) {
-		if (ele.type == "checkbox") {
-			sett[ele.id] = ele.checked;
-		} else {
-			sett[ele.id] = ele.value;
-		}
-	})
+	$('input[store]')
+		.each(function (ind, ele) {
+			if (ele.type == "checkbox") {
+				sett[ele.id] = ele.checked;
+			} else {
+				sett[ele.id] = ele.value;
+			}
+		})
 	if (impet.initialization) return;
 	localStorage['impetSet' + impet.user] = JSON.stringify(sett);
 }
+
 display.default = {
 	zoom: 7,
 	centerLat: 49,
 	centerLng: 22
+
 }
 
 function mapaZmienilaObszar() {
@@ -230,26 +255,31 @@ function mapaZmienilaObszar() {
 	if (display.zoomChanged) {
 		display.zoomChanged = false;
 	}
+
 }
-$('body').on('change', 'input[store]', function (e) {
-	display.odczytajIZapiszUstawienie();
-	switch (this.id) {
-	case "ogranicznikWielkosci":
-	case "wszyscy":
-	case "rysowac":
-	case "okragle":
-		{
-			sterownik.id.forEach(function (el) {
-				el.marker.set('icon', el.icon);
-			})
-			//		markeryNazwa.draw();
-			break;
+
+$('body')
+	.on('change', 'input[store]', function (e) {
+		display.odczytajIZapiszUstawienie();
+		switch (this.id) {
+		case "ogranicznikWielkosci":
+		case "wszyscy":
+		case "rysowac":
+		case "okragle":
+			{
+				sterownik.id.forEach(function (el) {
+					el.marker.set('icon', el.icon);
+				})
+				//		markeryNazwa.draw();
+				break;
+
+			}
 		}
-	}
-	display.wczytajIUstawUstawienia();
-	//wyczyscWszystkie();
-	markeryNazwa.draw();
-})
+		display.wczytajIUstawUstawienia();
+		//wyczyscWszystkie();
+		markeryNazwa.draw();
+	})
+
 
 function dp(that, property, opt) {
 	var prop = {};
@@ -289,6 +319,7 @@ function Drogi(route) {
 		this.drogi.push(droga);
 		this.dystans += droga.dystans;
 		this.czas += droga.czas;
+
 	}
 }
 
@@ -302,6 +333,7 @@ function TrasaShow(punkty) {
 	});
 	this.wyznaczOdcinkiNew();
 	this.path = [];
+
 }
 TrasaShow.prototype.wyznaczOdcinkiNew = function () {
 	var paths = this.poly.latLngs;
@@ -313,6 +345,7 @@ TrasaShow.prototype.wyznaczOdcinkiNew = function () {
 			this.TwoPointsToWay(this.punkty[x], this.punkty[x + 1])
 		}
 		paths.setAt(x, (this.punkty[x].firma.odcinki[this.punkty[x + 1].firma.key]));
+
 	}
 }
 TrasaShow.prototype.TwoPointsToWay = function (fromPoint, toPoint, reply) {
@@ -359,6 +392,7 @@ TrasaShow.prototype.TwoPointsToWay = function (fromPoint, toPoint, reply) {
 			var req = {
 				origin: fromPoint.firma.position,
 				destination: toPoint.firma.position,
+
 				waypoints: [],
 				optimizeWaypoints: false,
 				travelMode: google.maps.TravelMode.DRIVING
@@ -366,6 +400,7 @@ TrasaShow.prototype.TwoPointsToWay = function (fromPoint, toPoint, reply) {
 			//if (req.origin.position.lat){}
 			directionsService.ile++;
 			directionsService.route(req, function (response, status) {
+
 				console.debug(status);
 				res = response;
 				if (status == google.maps.DirectionsStatus.OK) {
@@ -400,6 +435,9 @@ TrasaShow.prototype.TwoPointsToWay = function (fromPoint, toPoint, reply) {
 					return;
 				}
 			})
+
+
+
 		});
 	}
 };
@@ -433,14 +471,20 @@ function wczytajPanelDolny() {
 			inKolor.prop('disabled', false);
 			$('#opacityMiast')
 				.slider('enable');
+
 		} else {
 			MiastaKontroler.wyswietl(false);
 			inKolor.prop('disabled', true);
 			$('#opacityMiast')
 				.slider('disable');
 		}
+		//	MiastaKontroler
+
+
+
 		google.maps.event.trigger(impet.map, 'bounds_changed');
 	});
+
 	$('#uchwytPanelDolny')
 		.draggable({
 			axis: 'y',
@@ -471,6 +515,7 @@ function wczytajPanelDolny() {
 	//	sterownik.MarkeryDraw(true);
 	//	sterownik.MarkeryDraw();
 	google.maps.event.trigger(impet.map, 'bounds_changed');
+
 }
 
 function ustawionoKolor(e) {
@@ -511,6 +556,7 @@ FirmaBiezaca.prototype.zaladujFormatke = function () {
 };
 
 function ustawInterfejsObslugi() {
+
 	$('#panelLewyHandler')
 		.draggable({
 			axis: 'x',
@@ -526,10 +572,12 @@ function ustawInterfejsObslugi() {
 		.click(function () {
 			Trasy = new TrasyClass(trasy, impet.map);
 		});
+
 	$('#wczytajPanelDolny')
 		.click(function () {
 			wczytajPanelDolny();
 		});
+
 	nastepny = $('#nastepnaFirma');
 	nastepny.click(function (e) {
 		if (rekordy.length <= ++firmaBiezaca.id) {
@@ -616,6 +664,7 @@ function initialize() {
 						poly.color = 'red';
 						poly.weight = 6;
 					}
+
 				});
 			$("#selectable")
 				.on('mouseleave', 'li', function (e) {
@@ -627,6 +676,7 @@ function initialize() {
 						var poly = trasy.trasyId[trasaId].drogaNaMapie.poly;
 						poly.restoreState();
 					}
+
 				});
 			$("#selectable")
 				.selectable({
@@ -649,6 +699,9 @@ function initialize() {
 						trasy.bounds = new google.maps.LatLngBounds();
 					}
 				})
+
+			//       Trasy = new TrasyClass(Trasy, map);
+
 			var tmpColor = $('#trasaOpis')
 				.css('backgroundColor');
 			$('#trasaOpis')
@@ -660,6 +713,7 @@ function initialize() {
 				}, {
 					duration: 1500
 				});
+
 		};
 		TrasyClass.prototype.wczytajIWyswietl = function () {
 			var that = this;
@@ -689,6 +743,7 @@ function initialize() {
 				impet.map.fitBounds(trasy.bounds);
 			}
 		};
+
 		TrasyClass.prototype.nowaTrasa = function (opis) {
 			var trasaStart = {
 				id: newId--,
@@ -706,6 +761,7 @@ function initialize() {
 			panel.przelacz(false);
 			this.trasa.pokaz();
 			this.trasa.edytuj();
+
 		};
 
 		function Trasa(trasa) {
@@ -715,6 +771,7 @@ function initialize() {
 			this.setValues(trasa);
 			this.pokaz();
 		}
+
 		Trasa.prototype = new google.maps.MVCArray();
 		Trasa.prototype.constructor = Trasa;
 		Trasa.prototype.wczytajPunkty = function (callback) {
@@ -726,6 +783,7 @@ function initialize() {
 				data: 0,
 				condition: con
 			};
+
 			$.get(serwer + '/ajax/ajaxuniversal4.php', obj, function (data) {
 				var punkty = data; //dbo.tblTrasyPunktyShort.slice(0);
 				if (!that.get('loaded')) {
@@ -748,13 +806,14 @@ function initialize() {
 				if (!el.marker) {
 					var iconTemp = el.markerOptions.icon;
 					delete el.markerOptions.icon;
-					el.marker = new Markero(el.markerOptions);
+					el.marker = new Markero(el.markerOptions); //google.maps.
 					// 					el.marker.set('icon', iconTemp);
 					el.marker.setIcon(Markero.icon(0.8, '#' + el.kto.kolor.slice(0, 3), ind + 1));
 					el.marker.set('map', impet.map);
 					el.marker.addListener('rightclick', impet.markerRightClicked)
 					that.markery[ind] = el.marker;
 					var postemp = el.firma.position;
+					//if()
 					el.marker.bindTo('position', el.firma.mvc);
 					var opacityDiv = ($.now() - el.kiedy.getTime()) / panelTrasy.dataPrzedzial;
 					if (opacityDiv > 1)
@@ -763,13 +822,16 @@ function initialize() {
 						opacityDiv = 0;
 					var opacity = 1 - opacityDiv * 0.95;
 					el.marker.setOpacity(opacity);
+
 				} else {
 					el.marker.setIcon(Markero.icon(0.8, '#' + el.kto.kolor.slice(0, 3), ind + 1));
 					el.marker.notify('icon');
 					el.marker.bindTo('position', el.firma.mvc);
+
 				}
 				el.marker.setVisible(czyPokazac);
 			});
+
 			if ((this.drogaNaMapie == null) || this.drogaNaMapie.poly.getPath() == undefined || (this.drogaNaMapie.poly.getPath()
 				.getLength() == 0)) {
 				this.drogaNaMapie = new TrasaShow(this.getArray());
@@ -810,6 +872,7 @@ function initialize() {
 			}
 			this.drogaNaMapie.wyznaczOdcinkiNew(this.getArray());
 			this.edytuj();
+
 		};
 		Trasa.prototype.listaHTML = function () {
 			var that = this;
@@ -862,8 +925,11 @@ function initialize() {
 				return kolor
 			}
 		})();
+
+
 		Trasa.prototype.edytuj = function () {
 			var that = this;
+
 			Trasa.prevIndex = 1
 			panelTrasa.html(this.listaHTML());
 			var sort = $('#selectable2')
@@ -873,11 +939,13 @@ function initialize() {
 						that.prevIndex = $(ui.item)
 							.index();
 						that.moveItem = that.getAt(that.prevIndex);
+
 					},
 					change: function (event, ui) {
 						//var index = that.removeAt(Trasa.prevIndex)
 						console.log($(ui.item)
 							.index());
+
 						console.log($(ui.placeholder)
 							.index())
 						//that.insertAt(index);
@@ -933,11 +1001,11 @@ function initialize() {
 					var firmaId = $(this)
 						.data('id');
 					var firma = sterownik.id[firmaId];
-					//					map.panTo(firma.position);
-					//					var zoom = map.getZoom();
-					//					if (zoom < 12) {
-					//						map.setZoom(zoom + 2);
-					//					}
+					//map.panTo(firma.position);
+					//var zoom = map.getZoom();
+					//if (zoom < 12) {
+					//	map.setZoom(zoom + 2);
+					//}
 					firma.marker.setDraggable(!firma.marker.getDraggable());
 					impet.fb = firma;
 				})
@@ -947,6 +1015,7 @@ function initialize() {
 					var firma = sterownik.id[firmaId];
 					map.panTo(firma.position);
 					var zoom = map.getZoom();
+
 				});
 		};
 
@@ -967,6 +1036,7 @@ function initialize() {
 			if (typeof element.kiedy === 'string') {
 				element.kiedy = new Date(element.kiedy.replace(/(..)(..)(..)/, '20$1-$2-$3'));
 			}
+
 			this.setValues(element);
 			this.markery = {};
 			if (element.id > 0) { //  bo mniejsze od 1 b ozanaczaly nowe !!!
@@ -995,11 +1065,13 @@ function initialize() {
 				[-panelTrasy.width(), 0.01],
 				[0, 1]
 			];
+
 			if (((typeof czyTrasy === 'undefined') && (panelTrasy.offset()
 				.left)) || czyTrasy) {
 				var tmp = par.shift();
 				par.push(tmp);
 			}
+
 			var wektor = par[0][0];
 			panelTrasy.animate({
 				left: wektor
@@ -1015,6 +1087,7 @@ function initialize() {
 				panel.przyciagaj = !panel.przyciagaj;
 			}
 		})
+
 		panelTrasy.on('contextmenu', 'li', function (e) {
 			$('#trasaOpis')
 				.removeClass('ui-effects-transfer');
@@ -1044,6 +1117,7 @@ function initialize() {
 				panel.przelacz(false);
 				trasy.trasa.edytuj();
 			});
+
 			e.stopImmediatePropagation();
 			e.preventDefault();
 
@@ -1095,6 +1169,13 @@ function initialize() {
 			}
 		});
 	});
+
+	//	impet.map.addListener('zoom_changed', function () {
+	//		$('#zoomText')
+	//			.text(impet.map.getZoom());
+	//	});
+
+
 	//*****************************************************************************************************************************************
 	$(function () { //Iniciacja !!!!!
 		$.when(
@@ -1133,6 +1214,7 @@ function initialize() {
 					visible: false,
 					clickable: true
 				};
+
 				MiastaKontroler.changeOptions = function (optio) {
 					if (!optio) {
 						optio = MiastaKontroler.options;
@@ -1187,6 +1269,7 @@ function initialize() {
 				Firmy = FirmyImpet;
 				sterownik = firmySterownikSetup(impet.map, FirmyImpet);
 				// domyslnym uzytkownikiem jestem
+
 			});
 		directionsService = new google.maps.DirectionsService();
 		directionsService.ile = 0;
@@ -1219,9 +1302,13 @@ function initialize() {
 				$('#panelLewy')
 					.css('width', ui.position.left);
 			});
+
 		trasy.wczytajIWyswietl();
+		//impet.ster.handleInputs();
 		google.maps.event.trigger(impet.map, 'bounds_changed');
+
 	});
+
 	impet.zacznijZaznaczanie = function () {
 		$('#panelLewyTrasa li')
 			.removeClass('start stop');
@@ -1260,8 +1347,10 @@ function initialize() {
 			return $(this)
 				.data('id');
 		});
+
 		start = start.data('id');
 		stop = stop.data('id');
+
 		var waypts = [];
 		waypts = waypoints.map(function (ind, el) {
 			var result = {};
@@ -1269,6 +1358,7 @@ function initialize() {
 			result.stopover = true;
 			return result;
 		});
+
 		var req = {
 			origin: sterownik.id[start].position,
 			destination: sterownik.id[stop].position,
@@ -1309,6 +1399,7 @@ function initialize() {
 				dp(that, x, prop);
 			})(x, this);
 		}
+
 		this.mvc.set('position', new google.maps.LatLng(this.rekord.wspN, this.rekord.wspE));
 		dp(this, 'position', {
 			set: function (val) {
@@ -1353,11 +1444,11 @@ function initialize() {
 		});
 	}
 
-
 	function pokazInfoFirmy(e) {
 		var content;
 		var marker = this;
 		var firma = marker.parent;
+
 		$.get('./firma.html')
 			.done(
 				function (data) {
@@ -1367,6 +1458,7 @@ function initialize() {
 					if (firma.www == null) firma.www = "";
 					if (firma.od == null) firma.od = "";
 					if (firma.do == null) firma.do = "";
+
 					content = content.replace("{{nazwa}}", firma.nazwa);
 					content = content.replace("{{ulica}}", firma.ulica);
 					content = content.replace("{{miejscowosc}}", firma.kod + "  " + firma.miejscowosc.nazwa);
@@ -1396,11 +1488,13 @@ function initialize() {
 					infoWin.open(impet.map, marker);
 					//debugger;
 					if (firma.uwagi.length > 0) {
+
 						ib.open(impet.map, marker);
 						ib.content_.innerHTML = firma.uwagi;
 					}
 				})
 	}
+
 	dp(Firma.prototype, 'icon', {
 		get: function () {
 			var size = 0.4,
@@ -1441,6 +1535,7 @@ function initialize() {
 			if (cond.checked)
 				return Markero.iconCircle(12 * size, '#' + color, scala);
 			return Markero.icon(size * scala, '#' + color, this.priorytet);
+			// 		return 'https://chart.googleapis.com/chart?chst=d_map_spin&chld=' + size + '|0|' + color + '|13|b|' + this.priorytet+"";
 		}
 	});
 	dp(Firma.prototype, 'strokeColor', {
@@ -1511,6 +1606,7 @@ function initialize() {
 			return color;
 		}
 	});
+
 	dp(Firma.prototype, 'inView', {
 		get: function () {
 			return impet.map.getBounds()
@@ -1520,9 +1616,11 @@ function initialize() {
 
 	function firmySterownikSetup(map, rekordy) {
 		var sterownik = {
+
 			id: [],
 			rekordy: rekordy,
 			map: map,
+
 		};
 		var len = rekordy.length;
 		console.time('rekordy')
@@ -1531,10 +1629,10 @@ function initialize() {
 
 		progressbar.progressbar({
 			value: false,
-			change: function() {
+			change: function () {
 				progressLabel.text(progressbar.progressbar("value") + "%");
 			},
-			complete: function() {
+			complete: function () {
 				progressLabel.text("Gotowe!");
 			}
 		});
@@ -1542,8 +1640,8 @@ function initialize() {
 		var lenPart = Math.floor(len / howManyParts);
 		var lenSmallerPart = len - lenPart * howManyParts;
 		for (var xx = 0; xx < howManyParts; xx++) {
-			(function(ileRazy) {
-				return setTimeout(function() {
+			(function (ileRazy) {
+				return setTimeout(function () {
 					console.log('aha');
 					progressbar.progressbar("value", (ileRazy + 1) * 100 / howManyParts);
 					if (ileRazy == howManyParts - 2) {
@@ -1552,94 +1650,42 @@ function initialize() {
 					for (var x = lenPart * ileRazy; x < (ileRazy + 1) * lenPart; x++) {
 						sterownik.id[rekordy[x].id] = new Firma(rekordy[x], sterownik, impet.map);
 						window.sterownik = sterownik;
+						//		debugger;
+						//	console.log('aha')
 					}
 				}, 6000 / howManyParts * ileRazy)
 
 			})(xx);
 		}
-		setTimeout(function() {
+		setTimeout(function () {
 			for (var x = howManyParts * lenPart; x < howManyParts * lenPart + lenSmallerPart; x++) {
 				window.sterownik.id[rekordy[x].id] = new Firma(rekordy[x], sterownik, impet.map);
 				window.sterownik = sterownik;
 			}
+
 			dalej();
 		}, 6500);
 
 		function dalej() {
 			console.timeEnd('rekordy');
-			sterownik.id.forEach(function(el, ind) {
+			sterownik.id.forEach(function (el, ind) {
 				projekcjaNaSiatke(el);
 			});
-			impet.map.addListener('zoom_changed', function(e) {
+
+			impet.map.addListener('zoom_changed', function (e) {
 				return;
 			});
 			sterownik.uzytkownik = impet.users[4];
 			wczytajPanelDolny();
 			return sterownik;
 		}
+
+
 		display();
+
+
 	}
 }
-
-		google.impet = {};
-		google.impet.Trasy = function (opt) {
-			if (typeof (opt) === 'undefined') {
-				opt = {};
-			}
-			opt['od'] = opt['od'] || {
-				rok: 2013,
-				miesiac: 1
-			};
-			opt['do'] = opt['do'] || {
-				rok: (new Date)
-					.getYear() + 1900,
-				miesiac: (new Date)
-					.getMonth()
-			}
-			//   console.dir(opt);
-			var tmp = opt['od'];
-			tmp['date'] = new Date(Date.UTC(tmp.rok, tmp.miesiac));
-			var tmp = opt['do'];
-			tmp['date'] = new Date(Date.UTC(tmp.rok, tmp.miesiac + 1));
-			this.od = opt.od;
-			this.do = opt.do;
-		}
-
-		function codeAddress() {
-			var address = document.getElementById('address')
-				.value;
-			geocoder.geocode({
-				'address': address
-			}, function (results, status) {
-				if (status === google.maps.GeocoderStatus.OK) {
-					var loc = results[0].geometry.location;
-					impet.map.setCenter(loc);
-					markerGeocoder.setPosition(loc);
-					markerGeocoder.setVisible(true);
-					$('#address')
-						.val(loc.lat()
-							.toFixed(6) + ', ' + loc.lng()
-							.toFixed(6));
-					if (results[0]) {
-						markerGeocoder.infoWin.setContent('<div><h4>' + results[0].formatted_address + '</h4></div>');
-						markerGeocoder.infoWin.open(impet.map, markerGeocoder);
-					}
-				} else {
-					alert('Odszukanie nie powiodłow!' + status);
-				}
-			});
-		}
-		google.maps.Polyline.prototype.getBounds = function () {
-			var latlngBounds = new google.maps.LatLngBounds();
-			for (var x = 0; x < this.latLngs.j.length; x++) {
-				var path = this.latLngs.j[x];
-
-				for (var i = 0; i < path.getLength(); i++) {
-					latlngBounds.extend(path.getAt(i));
-				}
-			}
-			return latlngBounds;
-		}
 google.impet = {};
 google.impet.Trasy = function (opt) {
 	if (typeof (opt) === 'undefined') {
@@ -1662,6 +1708,72 @@ google.impet.Trasy = function (opt) {
 	tmp['date'] = new Date(Date.UTC(tmp.rok, tmp.miesiac + 1));
 	this.od = opt.od;
 	this.do = opt.do;
+
+
+
+}
+
+function codeAddress() {
+	var address = document.getElementById('address')
+		.value;
+	geocoder.geocode({
+		'address': address
+	}, function (results, status) {
+		if (status === google.maps.GeocoderStatus.OK) {
+			var loc = results[0].geometry.location;
+			impet.map.setCenter(loc);
+			markerGeocoder.setPosition(loc);
+			markerGeocoder.setVisible(true);
+			$('#address')
+				.val(loc.lat()
+					.toFixed(6) + ', ' + loc.lng()
+					.toFixed(6));
+			if (results[0]) {
+				markerGeocoder.infoWin.setContent('<div><h4>' + results[0].formatted_address + '</h4></div>');
+				markerGeocoder.infoWin.open(impet.map, markerGeocoder);
+			}
+		} else {
+			alert('Odszukanie nie powiodłow!' + status);
+		}
+	});
+}
+google.maps.Polyline.prototype.getBounds = function () {
+	var latlngBounds = new google.maps.LatLngBounds();
+	for (var x = 0; x < this.latLngs.j.length; x++) {
+		var path = this.latLngs.j[x];
+
+		for (var i = 0; i < path.getLength(); i++) {
+			latlngBounds.extend(path.getAt(i));
+		}
+	}
+	return latlngBounds;
+}
+
+google.impet = {};
+google.impet.Trasy = function (opt) {
+	if (typeof (opt) === 'undefined') {
+		opt = {};
+	}
+	opt['od'] = opt['od'] || {
+		rok: 2013,
+		miesiac: 1
+	};
+	opt['do'] = opt['do'] || {
+		rok: (new Date)
+			.getYear() + 1900,
+		miesiac: (new Date)
+			.getMonth()
+	}
+	//   console.dir(opt);
+	var tmp = opt['od'];
+	tmp['date'] = new Date(Date.UTC(tmp.rok, tmp.miesiac));
+	var tmp = opt['do'];
+	tmp['date'] = new Date(Date.UTC(tmp.rok, tmp.miesiac + 1));
+	this.od = opt.od;
+	this.do = opt.do;
+
+
+
 }
 google.impet.Trasy.prototype.wczytaj = function () {
 	var that = this;
@@ -1682,21 +1794,39 @@ google.impet.Trasy.prototype.wczytaj = function () {
 		}
 	});
 };
+
 google.impet.Trasy.prototype.setDisplay = function (display) {
 	this.display = display;
+
 }
+
 //T = google.impet.Trasy;
 //a = new T;
 //a.wczytaj();
+
 var infoWin = new google.maps.InfoWindow({
 	map: impet.map
 })
 google.maps.event.addDomListener(window, 'load', initialize);
+
+
+/*
+ * Extended API for Google Maps v3
+ *
+ * by José Fernando Calcerrada.
+ *
+ * Licensed under the GPL licenses:
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ */
+
+// LatLng
 /******************************************************************************/
 google.maps.LatLng.prototype.distanceFrom = function (latlng) {
 	var lat = [this.lat(), latlng.lat()]
 	var lng = [this.lng(), latlng.lng()]
-		//var R = 6371; // km (change this constant to get miles)
+
+	//var R = 6371; // km (change this constant to get miles)
 	var R = 6378137; // In meters
 	var dLat = (lat[1] - lat[0]) * Math.PI / 180;
 	var dLng = (lng[1] - lng[0]) * Math.PI / 180;
@@ -1705,6 +1835,7 @@ google.maps.LatLng.prototype.distanceFrom = function (latlng) {
 		Math.sin(dLng / 2) * Math.sin(dLng / 2);
 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 	var d = R * c;
+
 	return Math.round(d);
 }
 // TODO: revisar para 179, -179
@@ -1732,6 +1863,8 @@ Markero.prototype.getMiddle = function (marker) {
 	return this.getPosition()
 		.getMiddle(marker.getPosition());
 }
+
+
 // Polyline
 /******************************************************************************/
 Object.defineProperty(google.maps.Polyline.prototype, 'weight', {
@@ -1782,6 +1915,7 @@ google.maps.Polyline.prototype.storeState = function () {
 		color: this.color,
 		opacity: this.opacity,
 		visible: this.visible
+
 	}
 }
 google.maps.Polyline.prototype.restoreState = function () {
@@ -1790,7 +1924,9 @@ google.maps.Polyline.prototype.restoreState = function () {
 		this.color = this.state.color;
 		this.opacity = this.state.opacity;
 		this.visible = this.state.visible;
-	} catch (e) {}
+	} catch (e) {
+
+	}
 }
 google.maps.Polyline.prototype.getLength = function () {
 	var d = 0;
@@ -1801,6 +1937,7 @@ google.maps.Polyline.prototype.getLength = function () {
 		latlng = [path.getAt(i), path.getAt(i + 1)]
 		d += latlng[0].distanceFrom(latlng[1]);
 	}
+
 	return d;
 }
 google.maps.Polyline.prototype.getVertex = function (i) {
@@ -1829,6 +1966,7 @@ google.maps.Polyline.prototype.setVertex = function (i, latlng) {
 google.maps.Polyline.prototype.setVisible = function (visible) {
 	if (visible === true && !this.getVisible()) {
 		this.setMap(this.lastMap);
+
 	} else if (visible === false && this.getVisible()) {
 		this.lastMap = this.getMap();
 		this.setMap(null);

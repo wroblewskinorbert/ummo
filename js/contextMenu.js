@@ -1,14 +1,14 @@
  /*
 	ContextMenu v1.0
-	
+
 	A context menu for Google Maps API v3
 	http://code.martinpearman.co.uk/googlemapsapi/contextmenu/
-	
+
 	Copyright Martin Pearman
 	Last updated 21st November 2011
-	
+
 	developer@martinpearman.co.uk
-	
+
 	This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
 	This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
@@ -16,10 +16,13 @@
 	You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+$('#miastaSchowac').on('mouseover', function() {
+    impet.firmaEdycja.dialog('open')
+});
 function fzapiszEdycje() {
     var tmpId, tabId;
     var elementToSave = {};
-    tabId = $('#dialogFirmyEdycja > input').each(function(ind, ele) {
+    tabId = $('#dialogFirmyEdycja form > input').each(function(ind, ele) {
         //	debugger;
         if (ele.id != 'firmaId')
             elementToSave[ele.id] = $(ele).val()
@@ -41,13 +44,13 @@ function edytujJuz(){
 	impet.firmaEdycja.dialog('open');impet.firmaEdycja.getFB();
 }
 
-
+setTimeout(function() {
     var wiersz = function(x, tekst, typeOfInput) {
         var typeOfInput = typeOfInput || "text";
         return '<label for="' + x + '">' + tekst + '</label><input style="width:100%;" type="' + typeOfInput + '" id="' + x + '" /><br />'
     }
-    
-    var formularzFirma = '<input id="firmaId" type="hidden" />';
+
+    var formularzFirma = '<form name="formularzFirma" style="width: 370px; float: left"><input id="firmaId" type="hidden" />';
     formularzFirma += wiersz("nazwa", "Nazwa firmy:");
     formularzFirma += wiersz("ulica", "Ulica:");
     formularzFirma += wiersz("kod", "Kod:");
@@ -58,14 +61,15 @@ function edytujJuz(){
     formularzFirma += wiersz("priorytet", "Priorytet");
     formularzFirma += wiersz("wspN", "Wspolrzedna N: ");
     formularzFirma += wiersz("wspE", "Wspolrzedna E: ");
-    formularzFirma += '<button onclick="impet.firmaEdycja.getFB();" id="anulujEdycje">Anuluj</button> <button onclick="fzapiszEdycje()" id="zapiszEdycje">Zapisz</button>';
+    formularzFirma += '</form><div id="uwagi" style="float: right; border: black 1px solid; margin: 10px 0px; max-width: 370px; font-size: 70%;"></div><div style="clear: both;margin: : 10px;">'+
+    	'<p style="padding: 15px;"><button onclick="impet.firmaEdycja.getFB();" id="anulujEdycje">Anuluj</button> '+
+    	'<button onclick="fzapiszEdycje()" id="zapiszEdycje">Zapisz</button></div></p>';
     var firmyEdycja = $("<div id='dialogFirmyEdycja'></div>").appendTo(document.body).html(formularzFirma);
     Miasta.forEach(function(ele, ind) {
         $('#miejscowoscIdSelect').append($('<option value="' + ele.id + '">' + ele.nazwa + '</option>'))
-		inicjuj();// inicjuje okregi na miastach wzgledem ludnosci
     })
     fb = impet.fb;
-    
+
     firmyEdycja.getFB = function() {
         $('#firmaId').val(impet.fb.id);
         $('#nazwa').val(impet.fb.nazwa);
@@ -78,69 +82,73 @@ function edytujJuz(){
         $('#priorytet').val(impet.fb.priorytet);
         $('#wspN').val(impet.fb.wspN);
         $('#wspE').val(impet.fb.wspE);
+        $('#uwagi').html(impet.fb.uwagi);
+        $('#address').val(MiastaKontroler.miastaId[impet.fb.miejscowoscId].nazwa+' '+impet.fb.ulica);
     }
     firmyEdycja.dialog({
         minWidth: 400,
+        maxWidth:900,
+        width:800,
         autoOpen: false
     });
-    
+
     impet.firmaEdycja = firmyEdycja;
-    
+
     impet.edytujBiezaca = function() {
         impet.firmaEdycja.dialog('open');
         impet.firmaEdycja.getFB();
     }
     function ContextMenu(map, options) {
         options = options || {};
-        
+
         this.setMap(map);
-        
+
         this.classNames_ = options.classNames || {};
         this.map_ = map;
         this.mapDiv_ = map.getDiv();
         this.menuItems_ = options.menuItems || [];
         this.pixelOffset = options.pixelOffset || new google.maps.Point(10, -5);
     }
-    function inicjuj(){
+
     ContextMenu.prototype = new google.maps.OverlayView();
-    
+
     ContextMenu.prototype.draw = function() {
         if (this.isVisible_) {
             var mapSize = new google.maps.Size(this.mapDiv_.offsetWidth, this.mapDiv_.offsetHeight);
             var menuSize = new google.maps.Size(this.menu_.offsetWidth, this.menu_.offsetHeight);
             var mousePosition = this.getProjection().fromLatLngToDivPixel(this.position_);
-            
+
             var left = mousePosition.x;
             var top = mousePosition.y;
-            
+
             if (mousePosition.x > mapSize.width - menuSize.width - this.pixelOffset.x) {
                 left = left - menuSize.width - this.pixelOffset.x;
             } else {
                 left += this.pixelOffset.x;
             }
-            
+
             if (mousePosition.y > mapSize.height - menuSize.height - this.pixelOffset.y) {
                 top = top - menuSize.height - this.pixelOffset.y;
             } else {
                 top += this.pixelOffset.y;
             }
-            
+
             this.menu_.style.left = left + 'px';
             this.menu_.style.top = top + 'px';
         }
     };
-    
+
     ContextMenu.prototype.getVisible = function() {
         return this.isVisible_;
     };
-    
+
     ContextMenu.prototype.hide = function() {
         if (this.isVisible_) {
             this.menu_.style.display = 'none';
             this.isVisible_ = false;
         }
     };
-    
+
     ContextMenu.prototype.onAdd = function() {
         function createMenuItem(values) {
             var menuItem = document.createElement('div');
@@ -157,7 +165,7 @@ function edytujJuz(){
             };
             return menuItem;
         }
-        
+
         function createMenuSeparator() {
             var menuSeparator = document.createElement('div');
             if ($this.classNames_.menuSeparator) {
@@ -166,13 +174,13 @@ function edytujJuz(){
             return menuSeparator;
         }
         var $this = this; //	used for closures
-        
+
         var menu = document.createElement('div');
         if (this.classNames_.menu) {
             menu.className = this.classNames_.menu;
         }
         menu.style.cssText = 'display:none; position:absolute';
-        
+
         for (var i = 0, j = this.menuItems_.length; i < j; i++) {
             if (this.menuItems_[i].label && this.menuItems_[i].eventName) {
                 menu.appendChild(createMenuItem(this.menuItems_[i]));
@@ -180,28 +188,28 @@ function edytujJuz(){
                 menu.appendChild(createMenuSeparator());
             }
         }
-        
+
         delete this.classNames_;
         delete this.menuItems_;
-        
+
         this.isVisible_ = false;
         this.menu_ = menu;
         this.position_ = new google.maps.LatLng(0, 0);
-        
+
         google.maps.event.addListener(this.map_, 'click', function(mouseEvent) {
             $this.hide();
         });
-        
+
         this.getPanes().floatPane.appendChild(menu);
     };
-    
+
     ContextMenu.prototype.onRemove = function() {
         this.menu_.parentNode.removeChild(this.menu_);
         delete this.mapDiv_;
         delete this.menu_;
         delete this.position_;
     };
-    
+
     ContextMenu.prototype.show = function(latLng) {
         if (!this.isVisible_) {
             this.menu_.style.display = 'block';
@@ -216,9 +224,9 @@ function edytujJuz(){
 
 
     //################################################
-    
-    
-    
+
+
+
     var directionsRendererOptions = {};
     directionsRendererOptions.draggable = false;
     directionsRendererOptions.hideRouteList = true;
@@ -226,7 +234,7 @@ function edytujJuz(){
     directionsRendererOptions.preserveViewport = false;
     var directionsRenderer = new google.maps.DirectionsRenderer(directionsRendererOptions);
     var directionsService = new google.maps.DirectionsService();
-    
+
     var contextMenuOptions = {};
     contextMenuOptions.classNames = {
         menu: 'context_menu',
@@ -279,9 +287,9 @@ function edytujJuz(){
         label: 'Center map here'
     });
     contextMenuOptions.menuItems = menuItems;
-    
+
     var contextMenu = new ContextMenu(map, contextMenuOptions);
-    
+
     google.maps.event.addListener(map, 'rightclick', function(mouseEvent) {
         contextMenu.show(mouseEvent.latLng);
     });
@@ -293,9 +301,9 @@ function edytujJuz(){
     markerOptions.map = null;
     markerOptions.position = new google.maps.LatLng(0, 0);
     markerOptions.title = 'Directions origin';
-    
+
     var originMarker = new google.maps.Marker(markerOptions);
-    
+
     markerOptions.icon = 'http://www.google.com/intl/en_ALL/mapfiles/markerB.png';
     markerOptions.title = 'Directions destination';
     var destinationMarker = new google.maps.Marker(markerOptions);
@@ -328,7 +336,7 @@ function edytujJuz(){
                 directionsRequest.destination = destinationMarker.getPosition();
                 directionsRequest.origin = originMarker.getPosition();
                 directionsRequest.travelMode = google.maps.TravelMode.DRIVING;
-                
+
                 directionsService.route(directionsRequest, function(result, status) {
                     if (status === google.maps.DirectionsStatus.OK) {
                         //	hide the origin and destination markers as the DirectionsRenderer will render Markers itself
@@ -361,8 +369,8 @@ function edytujJuz(){
             document.getElementById('getDirectionsItem').style.display = 'block';
         }
     });
-    
-    
+
+
     var contextMenuOptions = {};
     contextMenuOptions.classNames = {
         menu: 'context_menu',
@@ -400,7 +408,7 @@ function edytujJuz(){
         label: 'Center map here'
     });
     contextMenuOptions.menuItems = menuItems;
-    
+
     var contextMenuMarker = new ContextMenu(map, contextMenuOptions);
 
     // 	google.maps.event.addListener(map, 'dblclick', function(mouseEvent){
@@ -410,7 +418,7 @@ function edytujJuz(){
     // 	});
     impet.markerRightClicked = function(mouseEvent) {
         contextMenuMarker.show(mouseEvent.latLng);
-    
+
     }
 
 
@@ -418,7 +426,7 @@ function edytujJuz(){
     google.maps.event.addListener(contextMenuMarker, 'menu_item_selected', function(latLng, eventName) {
         switch (eventName) {
             case 'change_position_click':
-                
+
                 break;
             // 			case 'directions_destination_click':
             // 				destinationMarker.setPosition(latLng);
@@ -473,4 +481,4 @@ function edytujJuz(){
     // 		}
     });
 
-}
+}, 7000);
