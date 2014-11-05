@@ -1,0 +1,185 @@
+From: <Saved by WebKit>
+Subject: 
+Date: Wed, 4 Nov 2014 04:00:39 -0000
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----=_NextPart_000_C4F4_D9A81C5D.D6CC7484"
+
+------=_NextPart_000_C4F4_D9A81C5D.D6CC7484
+Content-Type: text/html
+Content-Transfer-Encoding: quoted-printable
+Content-Location: http://localhost/ummo/firma2.html
+
+<html><head><meta charset=3D"UTF-8">
+<style>
+	#containerForData {
+		display: inline-block;
+		width: 280px;
+		box-shadow: rgba(148, 148, 148, 0.4) 3px 3px 22px -2px;
+		overflow: visible;
+		background: linear-gradient(124deg, #FEFEFE 10%, rgba(216, 255, 229, 0.81=
+) 65%, #FFFFFF 100%, #FFFFFF 72%, #FFFFFF 100%);
+		/ * W3C * /
+	}
+	#ulica,
+	#email,
+	#ocena,
+	#oddo,
+	#obrot {
+		float: left;
+		width: 49%;
+	}
+	#miejscowosc,
+	#www,
+	#priorytet,
+	#ostatnia,
+	#spoznienie {
+		float: right;
+		width: 49%;
+	}
+	#ocena,
+	#priorytet {
+		text-align: center;
+	}
+	#spoznienie,
+	#obrot,
+	#miejscowosc,
+	#ostatnia {
+		text-align: right;
+	}
+	#nazwa {
+		padding: 5px;
+		margin: 5px;
+		font-family: courier new;
+		font-size: 1.3em;
+		text-shadow: -3px 3px 5px rgba(69, 11, 21, 0.2);
+		/ * FF3.5 +, Opera 9 +, Saf1 +, Chrome, IE10 * /
+	}
+	#infoUwagi {
+		position: absolute;
+		bottom: 2px;
+		left: 2px;
+	}
+</style>
+
+</head><body><div id=3D"containerForData">
+	<form id=3D"formularzFirmy">
+		<div name=3D"nazwa">
+			<b>{{nazwa}}
+				</b>
+		</div>
+		<div name=3D"ulica">{{ulica}}
+		</div>
+		<div name=3D"miejscowosc">{{miejscowosc}}</div>
+		<div name=3D"email">email</div>
+		<div name=3D"www">{{www}}</div>
+		<div name=3D"ocena">Ocena: {{ocena}}</div>
+		<div name=3D"priorytet">Priorytet: {{priorytet}}</div>
+		<span name=3D"od">{{od}}</span>  <span name=3D"do"> &nbsp; &nbsp; {{do}} =
+</span>
+		<div name=3D"ostatnia">{{ostatnia}}</div>
+		<div name=3D"obrot">{{obrot}}</div>
+		<div name=3D"spoznienie">{{spoznienie}}</div>
+		<div name=3D"infoUwagi">
+			<!--	<input type=3D"checkbox" id=3D"czyUwagiWyswietlac" />-->
+		</div>
+
+</form></div>
+
+
+
+
+
+=09
+	<style>
+		#containerForData {
+			display: inline-block;
+			width: 280px;
+			box-shadow: rgba(148, 148, 148, 0.4) 3px 3px 22px -2px;
+			overflow: visible;
+			background: linear-gradient(124deg, #FEFEFE 10%, rgba(216, 255, 229, 0.8=
+1) 65%, #FFFFFF 100%, #FFFFFF 72%, #FFFFFF 100%);
+			/ * W3C * /
+		}
+		#ulica,
+		#email,
+		#ocena,
+		#oddo,
+		#obrot {
+			float: left;
+			width: 49%;
+		}
+		#miejscowosc,
+		#www,
+		#priorytet,
+		#ostatnia,
+		#spoznienie {
+			float: right;
+			width: 49%;
+		}
+		#ocena,
+		#priorytet {
+			text-align: center;
+		}
+		#spoznienie,
+		#obrot,
+		#miejscowosc,
+		#ostatnia {
+			text-align: right;
+		}
+		#nazwa {
+			padding: 5px;
+			margin: 5px;
+			font-family: courier new;
+			font-size: 1.3em;
+			text-shadow: -3px 3px 5px rgba(69, 11, 21, 0.2);
+			/ * FF3.5 + , Opera 9 + , Saf1 + , Chrome, IE10 * /
+		}
+		#infoUwagi {
+			position: absolute;
+			bottom: 2px;
+			left: 2px;
+		}
+	</style>
+
+
+
+	<div id=3D"containerForData">
+	=09
+			<div name=3D"nazwa">{ { nazwa } }</div>
+			<div name=3D"ulica">{ { ulica } }</div>
+			<div name=3D"miejscowosc">{{miejscowosc}}</div>
+			<div name=3D"email"></div>
+			<div name=3D"www">{{www}}</div>
+			<div name=3D"ocena">Ocena: { { ocena } }</div>
+			<div name=3D"priorytet">Priorytet: { { priorytet } }</div>
+			<span name=3D"od"> {
+		{
+			od
+		}
+	} </span>  <span name=3D"do"> &nbsp; &nbsp; {{do}} </span>
+	<div name=3D"ostatnia"> {
+		{
+			ostatnia
+		}
+	}</div>
+		<div name=3D"obrot">{ { obrot } }</div>
+	<div name=3D"spoznienie"> {
+		{
+			spoznienie
+		}
+	} </div>
+		<div name=3D"infoUwagi">
+		</div>
+=09
+</div>
+
+
+
+
+
+
+
+</body></html>
+------=_NextPart_000_C4F4_D9A81C5D.D6CC7484--

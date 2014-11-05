@@ -15,236 +15,261 @@
 
 	You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-var impet;
-$('#miastaSchowac').on('mouseover', function() {
-    impet.firmaEdycja.dialog('open')
-});
-function fzapiszEdycje() {
-    var tmpId, tabId;
-    var elementToSave = {};
-    tabId = $('#dialogFirmyEdycja form > input').each(function(ind, ele) {
-        //	debugger;
-        if (ele.id != 'firmaId')
-            elementToSave[ele.id] = $(ele).val()
-        else
-            tmpId = $(ele).val();
-    });
-    var plain = {
-        action: 'update',
-        table: 'firmy',
-        data: JSON.stringify(
-        elementToSave
-        ),
-        condition: 'id =' + tmpId
-    };
-    $.get(serwer + '/ajax/ajaxuniversal.php', plain);
-}
+ var impet;
 
-function edytujJuz(){
-	impet.firmaEdycja.dialog('open');impet.firmaEdycja.getFB();
-}
+ function fzapiszEdycje() {
+ 	var tmpId, tabId;
+ 	var elementToSave = {};
+ 	tabId = $('#dialogFirmyEdycja form > input').each(function (ind, ele) {
+ 		//	debugger;
+ 		if (ele.id != 'firmaId')
+ 			elementToSave[ele.id] = $(ele).val()
+ 		else
+ 			tmpId = $(ele).val();
+ 	});
+ 	var plain = {
+ 		action: 'update',
+ 		table: 'firmy',
+ 		data: JSON.stringify(
+ 			elementToSave
+ 		),
+ 		condition: 'id =' + tmpId
+ 	};
+ 	$.get(serwer + '/ajax/ajaxuniversal.php', plain);
+ }
 
-setTimeout(function() {
-    var wiersz = function(x, tekst, typeOfInput) {
-        var typeOfInput = typeOfInput || "text";
-        return '<label for="' + x + '">' + tekst + '</label><input style="width:100%;" type="' + typeOfInput + '" id="' + x + '" /><br />'
-    }
+ function edytujJuz() {
+ 	impet.firmaEdycja.dialog('open');
+ 	impet.firmaEdycja.getFB();
+ }
 
-    var formularzFirma = '<form name="formularzFirma" style="width: 370px; float: left"><input id="firmaId" type="hidden" />';
-    formularzFirma += wiersz("nazwa", "Nazwa firmy:");
-    formularzFirma += wiersz("ulica", "Ulica:");
-    formularzFirma += wiersz("kod", "Kod:");
-    formularzFirma += '<label for="miejscowoscIdSelect">Miejscowosc</label><br /><select id="miejscowoscIdSelect"></select><br />';
-    formularzFirma += wiersz("email", "E-mail");
-    formularzFirma += wiersz("www", "WWW");
-    formularzFirma += wiersz("ocena", "Ocena");
-    formularzFirma += wiersz("priorytet", "Priorytet");
-    formularzFirma += wiersz("wspN", "Wspolrzedna N: ");
-    formularzFirma += wiersz("wspE", "Wspolrzedna E: ");
-    formularzFirma += '</form><div id="uwagi" style="float: right; border: black 1px solid; margin: 10px 0px; max-width: 370px; font-size: 70%;"></div><div style="clear: both;margin: : 10px;">'+
-    	'<p style="padding: 15px;"><button onclick="impet.firmaEdycja.getFB();" id="anulujEdycje">Anuluj</button> '+
-    	'<button onclick="fzapiszEdycje()" id="zapiszEdycje">Zapisz</button></div></p>';
-    var firmyEdycja = $("<div id='dialogFirmyEdycja'></div>").appendTo(document.body).html(formularzFirma);
-    impet.miasta.forEach(function(ele, ind) {
-        $('#miejscowoscIdSelect').append($('<option value="' + ele.id + '">' + ele.nazwa + '</option>'))
-    })
-    fb = impet.fb;
+ setTimeout(function () {
+ 	var wiersz = function (x, tekst, typeOfInput) {
+ 		var typeOfInput = typeOfInput || "text";
+ 		return '<label for="' + x + '">' + tekst + '</label><input style="width:100%;" type="' + typeOfInput + '" id="' + x + '" /><br />'
+ 	}
 
-    firmyEdycja.getFB = function() {
-        $('#firmaId').val(impet.fb.id);
-        $('#nazwa').val(impet.fb.nazwa);
-        $('#ulica').val(impet.fb.ulica);
-        $('#kod').val(impet.fb.kod);
-        $('#miejscowoscIdSelect').val(impet.fb.miejscowoscId);
-        $('#email').val(impet.fb.email);
-        $('#www').val(impet.fb.www);
-        $('#ocena').val(impet.fb.ocena);
-        $('#priorytet').val(impet.fb.priorytet);
-        $('#wspN').val(impet.fb.wspN);
-        $('#wspE').val(impet.fb.wspE);
-        $('#uwagi').html(impet.fb.uwagi);
-        $('#address').val(impet.miasta.miastaId[impet.fb.miejscowoscId].nazwa+' '+impet.fb.ulica);
-    }
-    firmyEdycja.dialog({
-        minWidth: 400,
-        maxWidth:900,
-        width:800,
-        autoOpen: false
-    });
+ 	var formularzFirma = '<form name="formularzFirma" style="width: 370px; float: left"><input id="firmaId" type="hidden" />';
+ 	formularzFirma += wiersz("nazwa", "Nazwa firmy:");
+ 	formularzFirma += wiersz("ulica", "Ulica:");
+ 	formularzFirma += wiersz("kod", "Kod:");
+ 	formularzFirma += '<label for="miejscowoscIdSelect">Miejscowosc</label><br /><select id="miejscowoscIdSelect"></select><br />';
+ 	formularzFirma += wiersz("email", "E-mail");
+ 	formularzFirma += wiersz("www", "WWW");
+ 	formularzFirma += wiersz("ocena", "Ocena");
+ 	formularzFirma += wiersz("priorytet", "Priorytet");
+ 	formularzFirma += wiersz("wspN", "Wspolrzedna N: ");
+ 	formularzFirma += wiersz("wspE", "Wspolrzedna E: ");
+ 	formularzFirma += '</form><div id="uwagi" style="float: right; border: black 1px solid; margin: 10px 0px; max-width: 370px; font-size: 70%; width:45%;">' +
+		'</div><div style="clear: both;margin: 10px;">' +
+			'<p style="padding: 15px;"><button onclick="impet.firmaEdycja.getFB();" id="anulujEdycje">Anuluj</button> ' +
+ 			'<button onclick="fzapiszEdycje()" id="zapiszEdycje">Zapisz</button></div></p>';
+ 	var firmyEdycja = $("<div id='dialogFirmyEdycja'></div>").appendTo(document.body).html(formularzFirma);
+ 	impet.miejscowosc.forEach(function (ele, ind) {
+ 		$('#miejscowoscIdSelect').append($('<option value="' + ele.id + '">' + ele.nazwa + '</option>'))
+ 	})
+ 	fb = impet.fb;
 
-    impet.firmaEdycja = firmyEdycja;
+ 	firmyEdycja.getFB = function () {
+ 		$('#firmaId').val(impet.fb.id);
+ 		$('#nazwa').val(impet.fb.nazwa);
+ 		$('#ulica').val(impet.fb.ulica);
+ 		$('#kod').val(impet.fb.kod);
+ 		$('#miejscowoscIdSelect').val(impet.fb.miejscowoscId);
+ 		$('#email').val(impet.fb.email);
+ 		$('#www').val(impet.fb.www);
+ 		$('#ocena').val(impet.fb.ocena);
+ 		$('#priorytet').val(impet.fb.priorytet);
+ 		$('#wspN').val(impet.fb.wspN);
+ 		$('#wspE').val(impet.fb.wspE);
+ 		$('#uwagi').html(impet.fb.uwagi);
+ 		$('#address').val(impet.miejscowoscId[impet.fb.miejscowoscId].nazwa + ' ' + impet.fb.ulica);
+ 	}
+ 	firmyEdycja.dialog({
+ 		minWidth: 400,
+ 		maxWidth: 900,
+ 		width: 800,
+ 		autoOpen: false
+ 	});
 
-    impet.edytujBiezaca = function() {
-        impet.firmaEdycja.dialog('open');
-        impet.firmaEdycja.getFB();
-    }
-    function ContextMenu(map, options) {
-        options = options || {};
+ 	impet.firmaEdycja = firmyEdycja;
 
-        this.setMap(map);
+ 	impet.edytujBiezaca = function () {
+ 		impet.firmaEdycja.dialog('open');
+ 		impet.firmaEdycja.getFB();
+ 	}
 
-        this.classNames_ = options.classNames || {};
-        this.map_ = map;
-        this.mapDiv_ = map.getDiv();
-        this.menuItems_ = options.menuItems || [];
-        this.pixelOffset = options.pixelOffset || new google.maps.Point(10, -5);
-    }
+ 	function ContextMenu(map, options) {
+ 		options = options || {};
 
-    ContextMenu.prototype = new google.maps.OverlayView();
+ 		this.setMap(map);
 
-    ContextMenu.prototype.draw = function() {
-        if (this.isVisible_) {
-            var mapSize = new google.maps.Size(this.mapDiv_.offsetWidth, this.mapDiv_.offsetHeight);
-            var menuSize = new google.maps.Size(this.menu_.offsetWidth, this.menu_.offsetHeight);
-            var mousePosition = this.getProjection().fromLatLngToDivPixel(this.position_);
+ 		this.classNames_ = options.classNames || {};
+ 		this.map_ = map;
+ 		this.mapDiv_ = map.getDiv();
+ 		this.menuItems_ = options.menuItems || [];
+ 		this.pixelOffset = options.pixelOffset || new google.maps.Point(10, -5);
+ 	}
 
-            var left = mousePosition.x;
-            var top = mousePosition.y;
+ 	ContextMenu.prototype = new google.maps.OverlayView();
 
-            if (mousePosition.x > mapSize.width - menuSize.width - this.pixelOffset.x) {
-                left = left - menuSize.width - this.pixelOffset.x;
-            } else {
-                left += this.pixelOffset.x;
-            }
+ 	ContextMenu.prototype.draw = function () {
+ 		if (this.isVisible_) {
+ 			var mapSize = new google.maps.Size(this.mapDiv_.offsetWidth, this.mapDiv_.offsetHeight);
+ 			var menuSize = new google.maps.Size(this.menu_.offsetWidth, this.menu_.offsetHeight);
+ 			var mousePosition = this.getProjection().fromLatLngToDivPixel(this.position_);
 
-            if (mousePosition.y > mapSize.height - menuSize.height - this.pixelOffset.y) {
-                top = top - menuSize.height - this.pixelOffset.y;
-            } else {
-                top += this.pixelOffset.y;
-            }
+ 			var left = mousePosition.x;
+ 			var top = mousePosition.y;
 
-            this.menu_.style.left = left + 'px';
-            this.menu_.style.top = top + 'px';
-        }
-    };
+ 			if (mousePosition.x > mapSize.width - menuSize.width - this.pixelOffset.x) {
+ 				left = left - menuSize.width - this.pixelOffset.x;
+ 			} else {
+ 				left += this.pixelOffset.x;
+ 			}
 
-    ContextMenu.prototype.getVisible = function() {
-        return this.isVisible_;
-    };
+ 			if (mousePosition.y > mapSize.height - menuSize.height - this.pixelOffset.y) {
+ 				top = top - menuSize.height - this.pixelOffset.y;
+ 			} else {
+ 				top += this.pixelOffset.y;
+ 			}
 
-    ContextMenu.prototype.hide = function() {
-        if (this.isVisible_) {
-            this.menu_.style.display = 'none';
-            this.isVisible_ = false;
-        }
-    };
+ 			this.menu_.style.left = left + 'px';
+ 			this.menu_.style.top = top + 'px';
+ 		}
+ 	};
 
-    ContextMenu.prototype.onAdd = function() {
-        function createMenuItem(values) {
-            var menuItem = document.createElement('div');
-            menuItem.innerHTML = values.label;
-            if (values.className) {
-                menuItem.className = values.className;
-            }
-            if (values.id) {
-                menuItem.id = values.id;
-            }
-            menuItem.style.cssText = 'cursor:pointer; white-space:nowrap';
-            menuItem.onclick = function() {
-                google.maps.event.trigger($this, 'menu_item_selected', $this.position_, values.eventName);
-            };
-            return menuItem;
-        }
+ 	ContextMenu.prototype.getVisible = function () {
+ 		return this.isVisible_;
+ 	};
 
-        function createMenuSeparator() {
-            var menuSeparator = document.createElement('div');
-            if ($this.classNames_.menuSeparator) {
-                menuSeparator.className = $this.classNames_.menuSeparator;
-            }
-            return menuSeparator;
-        }
-        var $this = this; //	used for closures
+ 	ContextMenu.prototype.hide = function () {
+ 		if (this.isVisible_) {
+ 			this.menu_.style.display = 'none';
+ 			this.isVisible_ = false;
+ 		}
+ 	};
 
-        var menu = document.createElement('div');
-        if (this.classNames_.menu) {
-            menu.className = this.classNames_.menu;
-        }
-        menu.style.cssText = 'display:none; position:absolute';
+ 	ContextMenu.prototype.onAdd = function () {
+ 		function createMenuItem(values) {
+ 			var menuItem = document.createElement('div');
+ 			menuItem.innerHTML = values.label;
+ 			if (values.className) {
+ 				menuItem.className = values.className;
+ 			}
+ 			if (values.id) {
+ 				menuItem.id = values.id;
+ 			}
+ 			menuItem.style.cssText = 'cursor:pointer; white-space:nowrap';
+ 			menuItem.onclick = function () {
+ 				google.maps.event.trigger($this, 'menu_item_selected', $this.position_, values.eventName);
+ 			};
+ 			return menuItem;
+ 		}
 
-        for (var i = 0, j = this.menuItems_.length; i < j; i++) {
-            if (this.menuItems_[i].label && this.menuItems_[i].eventName) {
-                menu.appendChild(createMenuItem(this.menuItems_[i]));
-            } else {
-                menu.appendChild(createMenuSeparator());
-            }
-        }
+ 		function createMenuSeparator() {
+ 			var menuSeparator = document.createElement('div');
+ 			if ($this.classNames_.menuSeparator) {
+ 				menuSeparator.className = $this.classNames_.menuSeparator;
+ 			}
+ 			return menuSeparator;
+ 		}
+ 		var $this = this; //	used for closures
 
-        delete this.classNames_;
-        delete this.menuItems_;
+ 		var menu = document.createElement('div');
+ 		if (this.classNames_.menu) {
+ 			menu.className = this.classNames_.menu;
+ 		}
+ 		menu.style.cssText = 'display:none; position:absolute';
 
-        this.isVisible_ = false;
-        this.menu_ = menu;
-        this.position_ = new google.maps.LatLng(0, 0);
+ 		for (var i = 0, j = this.menuItems_.length; i < j; i++) {
+ 			if (this.menuItems_[i].label && this.menuItems_[i].eventName) {
+ 				menu.appendChild(createMenuItem(this.menuItems_[i]));
+ 			} else {
+ 				menu.appendChild(createMenuSeparator());
+ 			}
+ 		}
 
-        google.maps.event.addListener(this.map_, 'click', function(mouseEvent) {
-            $this.hide();
-        });
+ 		delete this.classNames_;
+ 		delete this.menuItems_;
 
-        this.getPanes().floatPane.appendChild(menu);
-    };
+ 		this.isVisible_ = false;
+ 		this.menu_ = menu;
+ 		this.position_ = new google.maps.LatLng(0, 0);
 
-    ContextMenu.prototype.onRemove = function() {
-        this.menu_.parentNode.removeChild(this.menu_);
-        delete this.mapDiv_;
-        delete this.menu_;
-        delete this.position_;
-    };
+ 		google.maps.event.addListener(this.map_, 'click', function (mouseEvent) {
+ 			$this.hide();
+ 		});
 
-    ContextMenu.prototype.show = function(latLng) {
-        if (!this.isVisible_) {
-            this.menu_.style.display = 'block';
-            this.isVisible_ = true;
-        }
-        this.position_ = latLng;
-        this.draw();
-    };
+ 		this.getPanes().floatPane.appendChild(menu);
+ 	};
 
+ 	ContextMenu.prototype.onRemove = function () {
+ 		this.menu_.parentNode.removeChild(this.menu_);
+ 		delete this.mapDiv_;
+ 		delete this.menu_;
+ 		delete this.position_;
+ 	};
 
-
-
-
-    //################################################
+ 	ContextMenu.prototype.show = function (latLng) {
+ 		if (!this.isVisible_) {
+ 			this.menu_.style.display = 'block';
+ 			this.isVisible_ = true;
+ 		}
+ 		this.position_ = latLng;
+ 		this.draw();
+ 	};
 
 
 
-    var directionsRendererOptions = {};
-    directionsRendererOptions.draggable = false;
-    directionsRendererOptions.hideRouteList = true;
-    directionsRendererOptions.suppressMarkers = false;
-    directionsRendererOptions.preserveViewport = false;
-    var directionsRenderer = new google.maps.DirectionsRenderer(directionsRendererOptions);
-    var directionsService = new google.maps.DirectionsService();
 
-    var contextMenuOptions = {};
-    contextMenuOptions.classNames = {
-        menu: 'context_menu',
-        menuSeparator: 'context_menu_separator'
-    };
 
-    //	create an array of ContextMenuItem objects
-    //	an 'id' is defined for each of the four directions related items
-    var menuItems = [];
-    menuItems.push({
+ 	//################################################
+ 	/*
+menu uniwersalne:
+co tu jest
+kierunek stad
+kierunek do
+
+
+
+
+
+
+
+
+
+
+
+*/
+
+
+ 	var directionsRendererOptions = {};
+ 	directionsRendererOptions.draggable = false;
+ 	directionsRendererOptions.hideRouteList = true;
+ 	directionsRendererOptions.suppressMarkers = false;
+ 	directionsRendererOptions.preserveViewport = false;
+ 	var directionsRenderer = new google.maps.DirectionsRenderer(directionsRendererOptions);
+ 	var directionsService = new google.maps.DirectionsService();
+
+ 	var contextMenuOptions = {};
+ 	contextMenuOptions.classNames = {
+ 		menu: 'context_menu',
+ 		menuSeparator: 'context_menu_separator'
+ 	};
+
+ 	//	create an array of ContextMenuItem objects
+ 	//	an 'id' is defined for each of the four directions related items
+ 	var menuItems = [];
+
+ 	menuItems.push({
+ 		className: 'context_menu_item',
+ 		eventName: 'edytuj',
+ 		id: 'edytuj',
+ 		label: 'Edycja'
+ 	});
+ 	/*
+	menuItems.push({
         className: 'context_menu_item',
         eventName: 'directions_origin_click',
         id: 'directionsOriginItem',
@@ -268,35 +293,40 @@ setTimeout(function() {
         id: 'getDirectionsItem',
         label: 'Get directions'
     });
-    //	a menuItem with no properties will be rendered as a separator
-    menuItems.push({});
-    menuItems.push({
-        className: 'context_menu_item',
-        eventName: 'zoom_in_click',
-        label: 'Zoom in'
-    });
-    menuItems.push({
-        className: 'context_menu_item',
-        eventName: 'zoom_out_click',
-        label: 'Zoom out'
-    });
-    menuItems.push({});
-    menuItems.push({
-        className: 'context_menu_item',
-        eventName: 'center_map_click',
-        label: 'Center map here'
-    });
-    contextMenuOptions.menuItems = menuItems;
+	*/
+ 	//	menuItems.push({
+ 	//		className:'context_menu_item',
+ 	//		eventName:'edytuj',
+ 	//		label: 'Edycja'
+ 	//	})
 
-    var contextMenu = new ContextMenu(map, contextMenuOptions);
+ 	//	a menuItem with no properties will be rendered as a separator
+ 	menuItems.push({});
+ 	menuItems.push({
+ 		className: 'context_menu_item',
+ 		eventName: 'zoom_in_click',
+ 		label: 'Zoom in'
+ 	});
+ 	menuItems.push({
+ 		className: 'context_menu_item',
+ 		eventName: 'zoom_out_click',
+ 		label: 'Zoom out'
+ 	});
+ 	menuItems.push({});
+ 	menuItems.push({
+ 		className: 'context_menu_item',
+ 		eventName: 'center_map_click',
+ 		label: 'Center map here'
+ 	});
+ 	contextMenuOptions.menuItems = menuItems;
 
-    google.maps.event.addListener(map, 'rightclick', function(mouseEvent) {
-        contextMenu.show(mouseEvent.latLng);
-    });
+ 	var contextMenu = new ContextMenu(map, contextMenuOptions);
 
-    //	create markers to show directions origin and destination
-    //	both are not visible by default
-    var markerOptions = {};
+ 	
+
+ 	//	create markers to show directions origin and destination
+ 	//	both are not visible by default
+ 	/*var markerOptions = {};
     markerOptions.icon = 'http://www.google.com/intl/en_ALL/mapfiles/markerA.png';
     markerOptions.map = null;
     markerOptions.position = new google.maps.LatLng(0, 0);
@@ -307,178 +337,191 @@ setTimeout(function() {
     markerOptions.icon = 'http://www.google.com/intl/en_ALL/mapfiles/markerB.png';
     markerOptions.title = 'Directions destination';
     var destinationMarker = new google.maps.Marker(markerOptions);
+*/
+ 	//	listen for the ContextMenu 'menu_item_selected' event
+ 	google.maps.event.addListener(contextMenu, 'menu_item_selected', function (latLng, eventName) {
+ 		switch (eventName) {
+ 		case 'directions_origin_click':
+ 			originMarker.setPosition(latLng);
+ 			if (!originMarker.getMap()) {
+ 				originMarker.setMap(map);
+ 			}
+ 			break;
+ 		case 'directions_destination_click':
+ 			destinationMarker.setPosition(latLng);
+ 			if (!destinationMarker.getMap()) {
+ 				destinationMarker.setMap(map);
+ 			}
+ 			break;
+ 		case 'clear_directions_click':
+ 			directionsRenderer.setMap(null);
+ 			//	set CSS styles to defaults
+ 			document.getElementById('clearDirectionsItem').style.display = '';
+ 			document.getElementById('directionsDestinationItem').style.display = '';
+ 			document.getElementById('directionsOriginItem').style.display = '';
+ 			document.getElementById('getDirectionsItem').style.display = '';
+ 			break;
+ 		case 'get_directions_click':
+ 			var directionsRequest = {};
+ 			directionsRequest.destination = destinationMarker.getPosition();
+ 			directionsRequest.origin = originMarker.getPosition();
+ 			directionsRequest.travelMode = google.maps.TravelMode.DRIVING;
 
-    //	listen for the ContextMenu 'menu_item_selected' event
-    google.maps.event.addListener(contextMenu, 'menu_item_selected', function(latLng, eventName) {
-        switch (eventName) {
-            case 'directions_origin_click':
-                originMarker.setPosition(latLng);
-                if (!originMarker.getMap()) {
-                    originMarker.setMap(map);
-                }
-                break;
-            case 'directions_destination_click':
-                destinationMarker.setPosition(latLng);
-                if (!destinationMarker.getMap()) {
-                    destinationMarker.setMap(map);
-                }
-                break;
-            case 'clear_directions_click':
-                directionsRenderer.setMap(null);
-                //	set CSS styles to defaults
-                document.getElementById('clearDirectionsItem').style.display = '';
-                document.getElementById('directionsDestinationItem').style.display = '';
-                document.getElementById('directionsOriginItem').style.display = '';
-                document.getElementById('getDirectionsItem').style.display = '';
-                break;
-            case 'get_directions_click':
-                var directionsRequest = {};
-                directionsRequest.destination = destinationMarker.getPosition();
-                directionsRequest.origin = originMarker.getPosition();
-                directionsRequest.travelMode = google.maps.TravelMode.DRIVING;
+ 			directionsService.route(directionsRequest, function (result, status) {
+ 				if (status === google.maps.DirectionsStatus.OK) {
+ 					//	hide the origin and destination markers as the DirectionsRenderer will render Markers itself
+ 					originMarker.setMap(null);
+ 					destinationMarker.setMap(null);
+ 					directionsRenderer.setDirections(result);
+ 					directionsRenderer.setMap(map);
+ 					//	hide all but the 'Clear directions' menu item
+ 					document.getElementById('clearDirectionsItem').style.display = 'block';
+ 					document.getElementById('directionsDestinationItem').style.display = 'none';
+ 					document.getElementById('directionsOriginItem').style.display = 'none';
+ 					document.getElementById('getDirectionsItem').style.display = 'none';
+ 				} else {
+ 					alert('Sorry, the map was unable to obtain directions.\n\nThe request failed with the message: ' + status);
+ 				}
+ 			});
+ 			break;
+ 		case 'zoom_in_click':
+ 			map.setZoom(map.getZoom() + 1);
+ 			break;
+ 		case 'zoom_out_click':
+ 			map.setZoom(map.getZoom() - 1);
+ 			break;
+ 		case 'center_map_click':
+ 			map.panTo(latLng);
+ 			break;
 
-                directionsService.route(directionsRequest, function(result, status) {
-                    if (status === google.maps.DirectionsStatus.OK) {
-                        //	hide the origin and destination markers as the DirectionsRenderer will render Markers itself
-                        originMarker.setMap(null);
-                        destinationMarker.setMap(null);
-                        directionsRenderer.setDirections(result);
-                        directionsRenderer.setMap(map);
-                        //	hide all but the 'Clear directions' menu item
-                        document.getElementById('clearDirectionsItem').style.display = 'block';
-                        document.getElementById('directionsDestinationItem').style.display = 'none';
-                        document.getElementById('directionsOriginItem').style.display = 'none';
-                        document.getElementById('getDirectionsItem').style.display = 'none';
-                    } else {
-                        alert('Sorry, the map was unable to obtain directions.\n\nThe request failed with the message: ' + status);
-                    }
-                });
-                break;
-            case 'zoom_in_click':
-                map.setZoom(map.getZoom() + 1);
-                break;
-            case 'zoom_out_click':
-                map.setZoom(map.getZoom() - 1);
-                break;
-            case 'center_map_click':
-                map.panTo(latLng);
-                break;
-        }
-        if (originMarker.getMap() && destinationMarker.getMap() && document.getElementById('getDirectionsItem').style.display === '') {
-            //	display the 'Get directions' menu item if it is not visible and both directions origin and destination have been selected
-            document.getElementById('getDirectionsItem').style.display = 'block';
-        }
-    });
+ 		case 'edytuj':
+ 			edytujJuz();
 
-
-    var contextMenuOptions = {};
-    contextMenuOptions.classNames = {
-        menu: 'context_menu',
-        menuSeparator: 'context_menu_separator'
-    };
-
-    //	create an array of ContextMenuItem objects
-    //	an 'id' is defined for each of the four directions related items
-    var menuItems = [];
-    menuItems.push({
-        className: 'context_menu_item',
-        eventName: 'change_position_click',
-        id: 'setPositionItem',
-        label: 'Change position'
-    });
-    //	menuItems.push({className:'context_menu_item', eventName:'directions_destination_click', id:'directionsDestinationItem', label:'Directions to here'});
-    //	menuItems.push({className:'context_menu_item', eventName:'clear_directions_click', id:'clearDirectionsItem', label:'Clear directions'});
-    //	menuItems.push({className:'context_menu_item', eventName:'get_directions_click', id:'getDirectionsItem', label:'Get directions'});
-    //	a menuItem with no properties will be rendered as a separator
-    menuItems.push({});
-    menuItems.push({
-        className: 'context_menu_item',
-        eventName: 'zoom_in_click',
-        label: 'Zoom in'
-    });
-    menuItems.push({
-        className: 'context_menu_item',
-        eventName: 'zoom_out_click',
-        label: 'Zoom out'
-    });
-    menuItems.push({});
-    menuItems.push({
-        className: 'context_menu_item',
-        eventName: 'center_map_click',
-        label: 'Center map here'
-    });
-    contextMenuOptions.menuItems = menuItems;
-
-    var contextMenuMarker = new ContextMenu(map, contextMenuOptions);
-
-    // 	google.maps.event.addListener(map, 'dblclick', function(mouseEvent){
-    // 		contextMenuMarker.show(mouseEvent.latLng);
-    //		debugger;
-    // 		mouseEvent.stop();
-    // 	});
-    impet.markerRightClicked = function(mouseEvent) {
-        contextMenuMarker.show(mouseEvent.latLng);
-
-    }
+ 			break;
+ 		}
+ 		//        if (originMarker.getMap() && destinationMarker.getMap() && document.getElementById('getDirectionsItem').style.display === '') {
+ 		//            //	display the 'Get directions' menu item if it is not visible and both directions origin and destination have been selected
+ 		//            document.getElementById('getDirectionsItem').style.display = 'block';
+ 		//        }
+ 	});
 
 
-    //	listen for the ContextMenu 'menu_item_selected' event
-    google.maps.event.addListener(contextMenuMarker, 'menu_item_selected', function(latLng, eventName) {
-        switch (eventName) {
-            case 'change_position_click':
+ 	var contextMenuOptions = {};
+ 	contextMenuOptions.classNames = {
+ 		menu: 'context_menu',
+ 		menuSeparator: 'context_menu_separator'
+ 	};
 
-                break;
-            // 			case 'directions_destination_click':
-            // 				destinationMarker.setPosition(latLng);
-            // 				if(!destinationMarker.getMap()){
-            // 					destinationMarker.setMap(map);
-            // 				}
-            // 				break;
-            // 			case 'clear_directions_click':
-            // 				directionsRenderer.setMap(null);
-            // 				//	set CSS styles to defaults
-            // 				document.getElementById('clearDirectionsItem').style.display='';
-            // 				document.getElementById('directionsDestinationItem').style.display='';
-            // 				document.getElementById('directionsOriginItem').style.display='';
-            // 				document.getElementById('getDirectionsItem').style.display='';
-            // 				break;
-            // 			case 'get_directions_click':
-            // 				var directionsRequest={};
-            // 				directionsRequest.destination=destinationMarker.getPosition();
-            // 				directionsRequest.origin=originMarker.getPosition();
-            // 				directionsRequest.travelMode=google.maps.TravelMode.DRIVING;
+ 	//	create an array of ContextMenuItem objects
+ 	//	an 'id' is defined for each of the four directions related items
+ 	var menuItems = [];
+ 	menuItems.push({
+ 		className: 'context_menu_item',
+ 		eventName: 'change_position_click',
+ 		id: 'setPositionItem',
+ 		label: 'Change position'
+ 	});
+ 	//	menuItems.push({className:'context_menu_item', eventName:'directions_destination_click', id:'directionsDestinationItem', label:'Directions to here'});
+ 	//	menuItems.push({className:'context_menu_item', eventName:'clear_directions_click', id:'clearDirectionsItem', label:'Clear directions'});
+ 	//	menuItems.push({className:'context_menu_item', eventName:'get_directions_click', id:'getDirectionsItem', label:'Get directions'});
+ 	//	a menuItem with no properties will be rendered as a separator
+ 	menuItems.push({});
+ 	menuItems.push({
+ 		className: 'context_menu_item',
+ 		eventName: 'zoom_in_click',
+ 		label: 'Zoom in'
+ 	});
+ 	menuItems.push({
+ 		className: 'context_menu_item',
+ 		eventName: 'zoom_out_click',
+ 		label: 'Zoom out'
+ 	});
+ 	menuItems.push({});
+ 	menuItems.push({
+ 		className: 'context_menu_item',
+ 		eventName: 'center_map_click',
+ 		label: 'Center map here'
+ 	});
+ 	contextMenuOptions.menuItems = menuItems;
 
-            // 				directionsService.route(directionsRequest, function(result, status){
-            // 					if(status===google.maps.DirectionsStatus.OK){
-            // 						//	hide the origin and destination markers as the DirectionsRenderer will render Markers itself
-            // 						originMarker.setMap(null);
-            // 						destinationMarker.setMap(null);
-            // 						directionsRenderer.setDirections(result);
-            // 						directionsRenderer.setMap(map);
-            // 						//	hide all but the 'Clear directions' menu item
-            // 						document.getElementById('clearDirectionsItem').style.display='block';
-            // 						document.getElementById('directionsDestinationItem').style.display='none';
-            // 						document.getElementById('directionsOriginItem').style.display='none';
-            // 						document.getElementById('getDirectionsItem').style.display='none';
-            // 					} else {
-            // 						alert('Sorry, the map was unable to obtain directions.\n\nThe request failed with the message: '+status);
-            // 					}
-            // 				});
-            // 				break;
-            case 'zoom_in_click':
-                map.setZoom(map.getZoom() + 1);
-                break;
-            case 'zoom_out_click':
-                map.setZoom(map.getZoom() - 1);
-                break;
-            case 'center_map_click':
-                map.panTo(latLng);
-                break;
-        }
-    // 		if(originMarker.getMap() && destinationMarker.getMap() && document.getElementById('getDirectionsItem').style.display===''){
-    // 			//	display the 'Get directions' menu item if it is not visible and both directions origin and destination have been selected
-    // 			document.getElementById('getDirectionsItem').style.display='block';
-    // 		}
-    });
+ 	var contextMenuMarker = new ContextMenu(map, contextMenuOptions);
 
-}, 7000);
+ 	// 	google.maps.event.addListener(map, 'dblclick', function(mouseEvent){
+ 	// 		contextMenuMarker.show(mouseEvent.latLng);
+ 	//		debugger;
+ 	// 		mouseEvent.stop();
+ 	// 	});
+ 	impet.markerRightClicked = function (mouseEvent) {
+ 		contextMenuMarker.show(mouseEvent.latLng);
+
+ 	}
+
+google.maps.event.addListener(map, 'rightclick', function (mouseEvent) {
+ 		contextMenu.show(mouseEvent.latLng);
+ 	});
+ 	//	listen for the ContextMenu 'menu_item_selected' event
+ 	google.maps.event.addListener(contextMenuMarker, 'menu_item_selected', function (latLng, eventName) {
+ 		switch (eventName) {
+		case 'edytuj':
+google.maps.event.addListener(map, 'rightclick', function (mouseEvent) {
+ 		contextMenu.show(mouseEvent.latLng);
+ 	});
+ 	this.marker.setDraggable(true);
+ 			break;
+ 		case 'change_position_click':
+   
+ 			break;
+ 			// 			case 'directions_destination_click':
+ 			// 				destinationMarker.setPosition(latLng);
+ 			// 				if(!destinationMarker.getMap()){
+ 			// 					destinationMarker.setMap(map);
+ 			// 				}
+ 			// 				break;
+ 			// 			case 'clear_directions_click':
+ 			// 				directionsRenderer.setMap(null);
+ 			// 				//	set CSS styles to defaults
+ 			// 				document.getElementById('clearDirectionsItem').style.display='';
+ 			// 				document.getElementById('directionsDestinationItem').style.display='';
+ 			// 				document.getElementById('directionsOriginItem').style.display='';
+ 			// 				document.getElementById('getDirectionsItem').style.display='';
+ 			// 				break;
+ 			// 			case 'get_directions_click':
+ 			// 				var directionsRequest={};
+ 			// 				directionsRequest.destination=destinationMarker.getPosition();
+ 			// 				directionsRequest.origin=originMarker.getPosition();
+ 			// 				directionsRequest.travelMode=google.maps.TravelMode.DRIVING;
+
+ 			// 				directionsService.route(directionsRequest, function(result, status){
+ 			// 					if(status===google.maps.DirectionsStatus.OK){
+ 			// 						//	hide the origin and destination markers as the DirectionsRenderer will render Markers itself
+ 			// 						originMarker.setMap(null);
+ 			// 						destinationMarker.setMap(null);
+ 			// 						directionsRenderer.setDirections(result);
+ 			// 						directionsRenderer.setMap(map);
+ 			// 						//	hide all but the 'Clear directions' menu item
+ 			// 						document.getElementById('clearDirectionsItem').style.display='block';
+ 			// 						document.getElementById('directionsDestinationItem').style.display='none';
+ 			// 						document.getElementById('directionsOriginItem').style.display='none';
+ 			// 						document.getElementById('getDirectionsItem').style.display='none';
+ 			// 					} else {
+ 			// 						alert('Sorry, the map was unable to obtain directions.\n\nThe request failed with the message: '+status);
+ 			// 					}
+ 			// 				});
+ 			// 				break;
+ 		case 'zoom_in_click':
+ 			map.setZoom(map.getZoom() + 1);
+ 			break;
+ 		case 'zoom_out_click':
+ 			map.setZoom(map.getZoom() - 1);
+ 			break;
+ 		case 'center_map_click':
+ 			map.panTo(latLng);
+ 			break;
+ 		}
+ 		// 		if(originMarker.getMap() && destinationMarker.getMap() && document.getElementById('getDirectionsItem').style.display===''){
+ 		// 			//	display the 'Get directions' menu item if it is not visible and both directions origin and destination have been selected
+ 		// 			document.getElementById('getDirectionsItem').style.display='block';
+ 		// 		}
+ 	});
+
+ }, 12000);

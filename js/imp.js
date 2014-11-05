@@ -1,5 +1,5 @@
 var impet = {};
-var sterownik, google, MiastaKontroler, Miasta;
+var sterownik, google;
 impet.draw = false;
 impet.debug = true;
 impet.initialization = true;
@@ -343,7 +343,7 @@ TrasaShow.prototype.TwoPointsToWay = function (fromPoint, toPoint, reply) {
 			data: 0,
 			condition: con
 		};
-		$.getJSON(serwer + '/ajax/ajaxuniversal4.php', obj, function (data) {
+		$.getJSON(serwer + '/ajax.php', obj, function (data) {
 			var odcinki = data;
 			if (odcinki.length > 0) {
 				sessionStorage.setItem(fromKey + ';' + toKey, odcinki[0].data);
@@ -507,7 +507,7 @@ FirmaBiezaca.prototype.zaladujFormatke = function () {
 	$('#inputFirma')
 		.val(this.firma.nazwa);
 	$('#inputMiejscowosc')
-		.val(impet.miasta[this.id].nazwa);
+		.val(impet.miejscowosc[this.id].nazwa);
 };
 
 function ustawInterfejsObslugi() {
@@ -586,7 +586,7 @@ function initialize() {
 				data: 0,
 				condition: con
 			};
-			return $.getJSON(serwer + '/ajax/ajaxuniversal4.php', obj, function (data) {})
+			return $.getJSON(serwer + '/ajax.php', obj, function (data) {})
 		};
 		TrasyClass.prototype.wyswietl = function () {
 			panel.przelacz(true);
@@ -726,7 +726,7 @@ function initialize() {
 				data: 0,
 				condition: con
 			};
-			$.get(serwer + '/ajax/ajaxuniversal4.php', obj, function (data) {
+			$.get(serwer + '/ajax.php', obj, function (data) {
 				var punkty = data; //dbo.tblTrasyPunktyShort.slice(0);
 				if (!that.get('loaded')) {
 					for (var xxx = 0; xxx < punkty.length; xxx++) {
@@ -1098,15 +1098,15 @@ function initialize() {
 	//*****************************************************************************************************************************************
 	$(function () { //Iniciacja !!!!!
 		$.when(
-			$.get(serwer + '/ajax/ajaxuniversal4.php', {
+			$.get(serwer + '/ajax.php', {
 				table: 'PlMiejscowosci',
 				condition: 'id=id',
 				action: 'select',
 				data: 0
 			}, function (data) {
 				impet = impet || {};
-				impet.miasta = data;
-				var length = impet.miasta.length;
+				impet.miejscowosc = data;
+				var length = impet.miejscowosc.length;
 				impet.miastaSter={};
 				impet.miastaSter.options = {
 					strokeColor: '#000',
@@ -1116,21 +1116,21 @@ function initialize() {
 					visible: false,
 					clickable: true,
 					map:impet.map
-				};impet.miastaId = [];
-				impet.miasta.forEach(function (ele, ind, tab) {
-					impet.miastaId[ele.id] = ele;
+				};impet.miejscowoscId = [];
+				impet.miejscowosc.forEach(function (ele, ind, tab) {
+					impet.miejscowoscId[ele.id] = ele;
 				});
 				impet.miastaSter.wyswietl = function (czyWidoczne) {
 				impet.miastaSter.options.map = map;
 				impet.miastaSter.czyWidoczne = (czyWidoczne === false) ? false : true;
-						impet.miasta.forEach(function (ele, ind, tab) {
+						impet.miejscowosc.forEach(function (ele, ind, tab) {
 							ele.cityCircle.setVisible(czyWidoczne);
 						});
 						return;
 					}
 					var opt = Object.create(impet.miastaSter.options);
 					for (var x = 0; x < length; x++) {
-						var miasto = impet.miasta[x];
+						var miasto = impet.miejscowosc[x];
 						opt.radius = Math.pow(miasto.ludnoscSuma, 0.5) * 10;
 						opt.center = new google.maps.LatLng(miasto.wspN, miasto.wspE);
 						miasto.cityCircle = new google.maps.Circle(opt);
@@ -1141,13 +1141,13 @@ function initialize() {
 					if (!optio) {
 						optio = impet.miastaSter.options;
 					}
-					var length = impet.miasta.length;
+					var length = impet.miejscowosc.length;
 					for (var x = 0; x < length; x++) {
-						impet.miasta[x].cityCircle.setOptions(optio);
+						impet.miejscowosc[x].cityCircle.setOptions(optio);
 					}
 				};
 			}),
-			$.post(serwer + '/ajax/ajaxuniversal4.php', {
+			$.post(serwer + '/ajax.php', {
 				table: 'Firmy',
 				condition: 'id=id',
 				action: 'select',
@@ -1156,7 +1156,7 @@ function initialize() {
 			.done(function (data) {
 				dbo.tblFirmy = data;
 			}),
-			$.post(serwer + '/ajax/ajaxuniversal4.php', {
+			$.post(serwer + '/ajax.php', {
 				table: 'FirmyV',
 				condition: 'khId=khId',
 				action: 'select',
@@ -1186,7 +1186,7 @@ function initialize() {
 						FirmyImpet[x].ocena = -1;
 					if (FirmyImpet[x].priorytet === null)
 						FirmyImpet[x].priorytet = -1;
-					FirmyImpet[x].miejscowosc = impet.miastaId[FirmyImpet[x].miejscowoscId];
+					FirmyImpet[x].miejscowosc = impet.miejscowoscId[FirmyImpet[x].miejscowoscId];
 				}
 				Firmy = FirmyImpet;
 				sterownik = firmySterownikSetup(impet.map, FirmyImpet);

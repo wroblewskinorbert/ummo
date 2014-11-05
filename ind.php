@@ -1,4 +1,4 @@
-<?php header( "Content-type: text/html; charset=UTF-8"); header( 'Access-Control-Allow-Origin: http://localhost http://localhost'); ?>
+<?php header( "Content-type: text/html; charset=UTF-8"); header( 'Access-Control-Allow-Origin: *'); ?>
 <!DOCTYPE html>
 <html>
 <head>

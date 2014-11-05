@@ -1,0 +1,72 @@
+<html>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" type="text/javascript">
+</script>
+<style>
+	#containerForData {
+		display: inline-block;
+		width: 280px;
+		box-shadow: rgba(148, 148, 148, 0.4) 3px 3px 22px -2px;
+		overflow: visible;
+		background: linear-gradient(124deg, #FEFEFE 10%, rgba(216, 255, 229, 0.81) 65%, #FFFFFF 100%, #FFFFFF 72%, #FFFFFF 100%);
+		/ * W3C * /
+	}
+	#ulica,
+	#email,
+	#ocena,
+	#oddo,
+	#obrot {
+		float: left;
+		width: 49%;
+	}
+	#miejscowosc,
+	#www,
+	#priorytet,
+	#ostatnia,
+	#spoznienie {
+		float: right;
+		width: 49%;
+	}
+	#ocena,
+	#priorytet {
+		text-align: center;
+	}
+	#spoznienie,
+	#obrot,
+	#miejscowosc,
+	#ostatnia {
+		text-align: right;
+	}
+	#nazwa {
+		padding: 5px;
+		margin: 5px;
+		font-family: courier new;
+		font-size: 1.3em;
+		text-shadow: -3px 3px 5px rgba(69, 11, 21, 0.2);
+		/ * FF3.5 +, Opera 9 +, Saf1 +, Chrome, IE10 * /
+	}
+	#infoUwagi {
+		position: absolute;
+		bottom: 2px;
+		left: 2px;
+	}
+</style>
+
+<div id="containerForData">
+	<form id="formularzFirmy">
+		<div name="nazwa"><b>{{nazwa}}</b></div>
+		<div name="ulica">{{ulica}}</div>
+		<div name="miejscowosc">{{miejscowosc}}</div>
+		<div name="email">email</div>
+		<div name="www">{{www}}</div>
+		<div name="ocena">Ocena: {{ocena}}</div>
+		<div name="priorytet">Priorytet: {{priorytet}}</div>
+		<span name="od">{{od}}</span>  <span name="do"> &nbsp; &nbsp; {{do}} </span>
+		<div name="ostatnia">{{ostatnia}}</div>
+		<div name="obrot">{{obrot}}</div>
+		<div name="spoznienie">{{spoznienie}}</div>
+		<div name="infoUwagi">
+			<!--	<input type="checkbox" id="czyUwagiWyswietlac" />-->
+		</div>
+
+</div>
+var formularz={ var formularz=document.forms.formularzFirmy; wyswietl(firma) : function(id){ formularz.nazwa .innerHTML = firma.nazwa; formularz.ulica .innerHTML = firma.ulica ; formularz.miejscowosc.innerHTML = firma.miejscowosc.nazwa; formularz.www .innerHTML = firma.www; formularz.email .innerHTML = firma.email; formularz.ocena .innerHTML = firma.ocena ; formularz.priorytet .innerHTML = firma.priorytet ; formularz.od .innerHTML = firma.od; formularz.do .innerHTML = firma.do; formularz.uwagi .innerHTML = firma.nazwa; formularz.khId .innerHTML = firma.khId; formularz.obrot .innerHTML = firma.obrot ; formularz.spoznienie.innerHTML = firma.spoznienie; formularz.nazwa .innerHTML = firma.nazwa; } }

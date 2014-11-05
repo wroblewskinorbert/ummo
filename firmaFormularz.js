@@ -15,7 +15,7 @@ formularzFirma+=wiersz("priorytet","Priorytet");
 formularzFirma+=wiersz("wspN","Wspolrzedna N: ");
 formularzFirma+=wiersz("wspE","Wspolrzedna E: ");
 var firmyEdycja=$("<div id='dialogFirmyEdycja'></div>").appendTo(document.body).html(formularzFirma);
-Miasta.forEach(function(ele,ind){$('#miejscowoscIdSelect').append($('<option value="'+ele.id+'">'+ele.nazwa+'</option>'))})
+miejscowosc.forEach(function(ele,ind){$('#miejscowoscIdSelect').append($('<option value="'+ele.id+'">'+ele.nazwa+'</option>'))})
 firmyEdycja.dialog();
 
 firmyEdycja.getFB(){
