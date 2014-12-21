@@ -20,21 +20,21 @@ var google = google || {};
 impet.draw = false;
 impet.debug = true;
 var panoramaOptions, map, panorama, geocoder, mapDiv, markerGeocoder, directionsDisplay, directionsService, markeryNazwa, Markero, $, window, document, nicEditor, alert, myNicEditor, myNicInstancePanel, zakreslacz, console, ib;
-var nastepny, poprzedni, zapisz, localStorage, TrasyClass, Trasy, colorTab, kolejnyKolor, inter;
+var nastepny, poprzedni, zapisz, localStorage, TrasyClass, Trasy, colorTab, kolejnyKolor, inter, history;
 var trasy;
 var zwrocWZakresie, display = {};
 var serwer = 'http://192.168.2.220/'; //'http://localhost'; // document.location.origin;
 //var serwer = 'http://213.92.139.215'; //'http://localhost'; // document.location.origin;
 var serwer = 'http://localhost'; // document.location.origin;
 
-impet.settings.lastUserId = localStorage['lastUserId'] || 4;
+impet.settings.lastUserId = localStorage.lastUserId || 4;
 var loadedSett = JSON.parse(localStorage['impet' + impet.settings.lastUserId] || "{}");
 $.extend(impet.settings, loadedSett);
 
 impet._mapCreate = function () {
-	var mapDiv = document.getElementById('mapCanvas');
-	var lat = parseFloat(impet.settings.center.slice(0, impet.settings.center.indexOf(',')));
-	var lng = parseFloat(impet.settings.center.slice(impet.settings.center.indexOf(',') + 1));
+	var mapDiv = document.getElementById('mapCanvas'),
+		lat = parseFloat(impet.settings.center.slice(0, impet.settings.center.indexOf(','))),
+		lng = parseFloat(impet.settings.center.slice(impet.settings.center.indexOf(',') + 1));
 	impet.map = new google.maps.Map(mapDiv, {
 		disableDoubleClickZoom: true,
 		mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -68,12 +68,13 @@ impet._daneWczytaj = function () {
 		var kto = $('<select id="wyborPracownika"></select>');
 		data.forEach(function (ele) {
 			impet.users[ele.id] = ele;
-			if (ele.aktywny)
+			if (ele.aktywny) {
 				kto.append($('<option id="' + ele.id + '" value="' + ele.id + '">' + ele.inicjaly + '</option>'));
+			}
 		});
 		$('#panel').append(kto);
 		kto.on('change', function (e) {
-			localStorage['impetSettingsLastUserId'] = e.currentTarget.value;
+			localStorage.impetSettingsLastUserId = e.currentTarget.value;
 			var loadedSett = JSON.parse(localStorage['impet' + impet.settings.lastUserId] || "{}");
 			$.extend(impet.settings, loadedSett);
 			impet._ustawieniaWczytaj();
@@ -100,9 +101,11 @@ impet._daneWczytaj = function () {
 				action: 'select',
 				data: 0
 			})
-			.done(function (data) {
-				impet.firmy.records = data;
-			}),
+			.done(
+				function (data) {
+					impet.firmy.records = data;
+				}
+			),
 			$.post(serwer + '/ajax.php', {
 				table: 'FirmyV',
 				condition: 'khId=khId',
@@ -115,12 +118,14 @@ impet._daneWczytaj = function () {
 			})
 		)
 			.done(function (data) {
-				var len = impet.firmy.records.length;
+				var len = impet.firmy.records.length,
+					firma;
 				for (x = 0, len; x < len; x++) {
-					var firma = impet.firmy[impet.firmy.records[x].id] = new _Firma(impet.firmy.records[x]);
+					firma = impet.firmy[impet.firmy.records[x].id] = new _Firma(impet.firmy.records[x]);
 					firma.miejscowosc = impet.miejscowoscId[firma.miejscowoscId];
-					if (firma.khId)
+					if (firma.khId) {
 						firma.kh = impet.firmy.khId[firma.khId];
+					}
 					firma.odcinki = {};
 					projekcjaNaSiatke(firma);
 				}
@@ -134,7 +139,7 @@ impet._daneWczytaj = function () {
 
 impet._ustawieniaWczytaj = function () {
 	$('input[store]').each(function (ind, ele) {
-		if (ele.type == 'checkbox') {
+		if (ele.type === 'checkbox') {
 			impet.settings[ele.id] = ele.checked = impet.settings[ele.id] || ele.defaultChecked;
 		} else {
 			impet.settings[ele.id] = ele.value = impet.settings[ele.id] || ele.defaultValue;
@@ -338,7 +343,7 @@ function initialize() {
 	map.addListener('idle', mapaZmienilaObszar);
 
 	$.getScript('./js/funkcje.js');
-//	debugger;
+	//	debugger;
 	ustawZdarzeniaObslugi();
 
 	$.get('./js/TrasyClass.js').fail(function () {
@@ -366,9 +371,9 @@ function initialize() {
 }
 
 function _Firma(record) {
-	if (record.ocena===null)
+	if (record.ocena === null)
 		record.ocena = -1;
-	if (record.priorytet===null)
+	if (record.priorytet === null)
 		record.priorytet = -1;
 	if (!record.wspN)
 		record.wspN = 49.0000;
@@ -422,10 +427,10 @@ _Firma.prototype = Object.create(Markero.prototype, {
 			var size;
 			colorTab = ['4444', 'ff22', 'dd55', 'aa88', '88aa', '55dd', '22ff'],
 			size = Number((this.ocena + 4) / 10).toFixed(2);
-			if(this.ocena==-1) size=0.7;
+			if (this.ocena == -1) size = 0.7;
 			colorTab[-1] = 'ffffff';
 			var color = colorTab[this.priorytet] + '44';
-			if(this.priorytet==-1) color='bababa';
+			if (this.priorytet == -1) color = 'bababa';
 			var scala = (impet.settings['ogranicznikWielkosci'] * 1.0 + 1) / 5;
 
 			if (impet.settings.okragle) {
@@ -560,17 +565,17 @@ impet.setFb = function (firmaId) {
 	impet._ustawieniaZapisz();
 	var firmaW = impet.firmy[firmaId];
 	impet._firmaWypiszPanel(firmaW);
-	if (firmaW.ocena > -1){
+	if (firmaW.ocena > -1) {
 		$("#firmaOcenyDiv input:radio")[firmaW.ocena].checked = true;
-	} else{
-		if($("#firmaOcenyDiv input:radio:checked").length){
+	} else {
+		if ($("#firmaOcenyDiv input:radio:checked").length) {
 			$("#firmaOcenyDiv input:radio:checked")[0].checked = false;
 		}
 	}
-	if (firmaW.priorytet > -1){
+	if (firmaW.priorytet > -1) {
 		$("#firmaPriorytetDiv input:radio")[firmaW.priorytet].checked = true;
-	} else{
-		if($("#firmaPriorytetDiv input:radio:checked").length){
+	} else {
+		if ($("#firmaPriorytetDiv input:radio:checked").length) {
 			$("#firmaPriorytetDiv input:radio:checked")[0].checked = false;
 		}
 	}
@@ -659,7 +664,7 @@ window.onpopstate = function (e) {
 	impet._ustawieniaWczytaj();
 	impet._ustawieniaZapisz();
 	impet.setFb(impet.settings.ostatniaFirma);
-};  //zdarzenie zwiazane z historia
+}; //zdarzenie zwiazane z historia
 function spanData(dane) {
 	var id = dane.id;
 	//delete dane.id;
@@ -677,9 +682,11 @@ function spanData(dane) {
 	var $formularz = $((formularz).join(""));
 	return $formularz;
 }
+
 function wyswietlDaneFirmy() {
 	$('#firmaDane').html(spanData(impet.fb.rekord));
 }
+
 function stworzFormularz(dane) {
 	var formularz = [];
 	formularz.push('<form>');
@@ -690,7 +697,9 @@ function stworzFormularz(dane) {
 	var $formularz = $((formularz).join(""));
 	return $formularz;
 }
+
 function uzupelnijFormularz(formularz, dane) {}
+
 function createFormForCompany() {
 	var wiersz = function (x, tekst, typeOfInput) {
 		var typeOfInput = typeOfInput || "text";
