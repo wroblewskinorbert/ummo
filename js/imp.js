@@ -1,3 +1,4 @@
+// Początek
 var impet = {
 	'firmy': [],
 	map: {},
