@@ -5,6 +5,31 @@
 
 }
 
+div#fakturyPodglad {
+    position: fixed;
+    right: 300px;
+    top: 50px;
+    background-color: white;
+    opacity: 1;
+    z-index: 21;
+	padding:15px;
+	box-shadow: 12px 11px 18px 2px rgba(148,148,148,0.6);
+	
+    transition: width, height 0.4s ease-in;
+    display: none;
+}
+
+div#fakturyPodglad table {
+	border-collapse:collapse;
+ 	border:solid 0px gray;
+}
+div#fakturyPodglad table td, div#fakturyPodglad table th{
+	padding:5px;
+}
+div#fakturyPodglad table tr:nth-child(2n){
+	background-color:#bfd9df;
+/* 	border-width:0px; */
+}
 .street-image, html, body, #mapCanvas {
 	height: 100%;
 	margin: 0;

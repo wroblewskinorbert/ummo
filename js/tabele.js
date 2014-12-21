@@ -215,7 +215,7 @@ function wypiszTelefony(firmaId) {
 		.done(function (data) {
 			var telString = "";
 			data.forEach(function (ele) {
-				var nrWidoczny = ele.numer.trim();
+				var nrWidoczny = ele.numer;
 				if (ele['podstawowy'] == 1) {
 					nrWidoczny = '<b>' + nrWidoczny + '</b>';
 				}
