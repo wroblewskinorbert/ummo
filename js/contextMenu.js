@@ -17,96 +17,19 @@
 */
  var impet;
 
- function fzapiszEdycje() {
- 	var tmpId, tabId;
- 	var elementToSave = {};
- 	tabId = $('#dialogFirmyEdycja form > input').each(function (ind, ele) {
- 		//	debugger;
- 		if (ele.id != 'firmaId')
- 			elementToSave[ele.id] = $(ele).val()
- 		else
- 			tmpId = $(ele).val();
- 	});
- 	var plain = {
- 		action: 'update',
- 		table: 'firmy',
- 		data: JSON.stringify(
- 			elementToSave
- 		),
- 		condition: 'id =' + tmpId
- 	};
- 	$.get(serwer + '/ajax/ajaxuniversal.php', plain);
- }
-
- function edytujJuz() {
- 	impet.firmaEdycja.dialog('open');
- 	impet.firmaEdycja.getFB();
- }
 
  setTimeout(function () {
- 	var wiersz = function (x, tekst, typeOfInput) {
- 		var typeOfInput = typeOfInput || "text";
- 		return '<label for="' + x + '">' + tekst + '</label><input style="width:100%;" type="' + typeOfInput + '" id="' + x + '" /><br />'
- 	}
-
- 	var formularzFirma = '<form name="formularzFirma" style="width: 370px; float: left"><input id="firmaId" type="hidden" />';
- 	formularzFirma += wiersz("nazwa", "Nazwa firmy:");
- 	formularzFirma += wiersz("ulica", "Ulica:");
- 	formularzFirma += wiersz("kod", "Kod:");
- 	formularzFirma += '<label for="miejscowoscIdSelect">Miejscowosc</label><br /><select id="miejscowoscIdSelect"></select><br />';
- 	formularzFirma += wiersz("email", "E-mail");
- 	formularzFirma += wiersz("www", "WWW");
- 	formularzFirma += wiersz("ocena", "Ocena");
- 	formularzFirma += wiersz("priorytet", "Priorytet");
- 	formularzFirma += wiersz("wspN", "Wspolrzedna N: ");
- 	formularzFirma += wiersz("wspE", "Wspolrzedna E: ");
- 	formularzFirma += '</form><div id="uwagi" style="float: right; border: black 1px solid; margin: 10px 0px; max-width: 370px; font-size: 70%; width:45%;">' +
-		'</div><div style="clear: both;margin: 10px;">' +
-			'<p style="padding: 15px;"><button onclick="impet.firmaEdycja.getFB();" id="anulujEdycje">Anuluj</button> ' +
- 			'<button onclick="fzapiszEdycje()" id="zapiszEdycje">Zapisz</button></div></p>';
- 	var firmyEdycja = $("<div id='dialogFirmyEdycja'></div>").appendTo(document.body).html(formularzFirma);
- 	impet.miejscowosc.forEach(function (ele, ind) {
- 		$('#miejscowoscIdSelect').append($('<option value="' + ele.id + '">' + ele.nazwa + '</option>'))
- 	})
- 	fb = impet.fb;
-
- 	firmyEdycja.getFB = function () {
- 		$('#firmaId').val(impet.fb.id);
- 		$('#nazwa').val(impet.fb.nazwa);
- 		$('#ulica').val(impet.fb.ulica);
- 		$('#kod').val(impet.fb.kod);
- 		$('#miejscowoscIdSelect').val(impet.fb.miejscowoscId);
- 		$('#email').val(impet.fb.email);
- 		$('#www').val(impet.fb.www);
- 		$('#ocena').val(impet.fb.ocena);
- 		$('#priorytet').val(impet.fb.priorytet);
- 		$('#wspN').val(impet.fb.wspN);
- 		$('#wspE').val(impet.fb.wspE);
- 		$('#uwagi').html(impet.fb.uwagi);
- 		$('#address').val(impet.miejscowoscId[impet.fb.miejscowoscId].nazwa + ' ' + impet.fb.ulica);
- 	}
- 	firmyEdycja.dialog({
- 		minWidth: 400,
- 		maxWidth: 900,
- 		width: 800,
- 		autoOpen: false
- 	});
-
- 	impet.firmaEdycja = firmyEdycja;
-
- 	impet.edytujBiezaca = function () {
- 		impet.firmaEdycja.dialog('open');
- 		impet.firmaEdycja.getFB();
- 	}
+ 	//console.log('context_menu_item');
 
  	function ContextMenu(map, options) {
  		options = options || {};
+impet
 
- 		this.setMap(map);
+ 		this.setMap(impet.map);
 
  		this.classNames_ = options.classNames || {};
- 		this.map_ = map;
- 		this.mapDiv_ = map.getDiv();
+ 		this.map_ = impet.map;
+ 		this.mapDiv_ = impet.map.getDiv();
  		this.menuItems_ = options.menuItems || [];
  		this.pixelOffset = options.pixelOffset || new google.maps.Point(10, -5);
  	}
@@ -322,7 +245,7 @@ kierunek do
 
  	var contextMenu = new ContextMenu(map, contextMenuOptions);
 
- 	
+
 
  	//	create markers to show directions origin and destination
  	//	both are not visible by default
@@ -415,6 +338,14 @@ kierunek do
  	//	create an array of ContextMenuItem objects
  	//	an 'id' is defined for each of the four directions related items
  	var menuItems = [];
+
+ 	menuItems.push({
+ 		className: 'context_menu_item',
+ 		eventName: 'edytuj',
+ 		id: 'edytuj',
+ 		label: 'Edycja'
+ 	});
+
  	menuItems.push({
  		className: 'context_menu_item',
  		eventName: 'change_position_click',
@@ -426,6 +357,11 @@ kierunek do
  	//	menuItems.push({className:'context_menu_item', eventName:'get_directions_click', id:'getDirectionsItem', label:'Get directions'});
  	//	a menuItem with no properties will be rendered as a separator
  	menuItems.push({});
+ 	menuItems.push({
+ 		className: 'context_menu_item',
+ 		eventName: 'edytuj',
+ 		label: 'Edycja'
+ 	});
  	menuItems.push({
  		className: 'context_menu_item',
  		eventName: 'zoom_in_click',
@@ -456,21 +392,22 @@ kierunek do
 
  	}
 
-google.maps.event.addListener(map, 'rightclick', function (mouseEvent) {
+ 	google.maps.event.addListener(map, 'rightclick', function (mouseEvent) {
  		contextMenu.show(mouseEvent.latLng);
  	});
  	//	listen for the ContextMenu 'menu_item_selected' event
  	google.maps.event.addListener(contextMenuMarker, 'menu_item_selected', function (latLng, eventName) {
  		switch (eventName) {
-		case 'edytuj':
-google.maps.event.addListener(map, 'rightclick', function (mouseEvent) {
- 		contextMenu.show(mouseEvent.latLng);
- 	});
- 	this.marker.setDraggable(true);
+ 		case 'edytuj':
+ 			google.maps.event.addListener(map, 'rightclick', function (mouseEvent) {
+ 				contextMenu.show(mouseEvent.latLng);
+ 			});
+ 			this.marker.setDraggable(true);
  			break;
  		case 'change_position_click':
-   
+
  			break;
+
  			// 			case 'directions_destination_click':
  			// 				destinationMarker.setPosition(latLng);
  			// 				if(!destinationMarker.getMap()){
@@ -514,6 +451,10 @@ google.maps.event.addListener(map, 'rightclick', function (mouseEvent) {
  		case 'zoom_out_click':
  			map.setZoom(map.getZoom() - 1);
  			break;
+ 		case 'edytuj':
+ 			impet.fb = this.parent.id;
+ 			edytujJuz();
+ 			break;
  		case 'center_map_click':
  			map.panTo(latLng);
  			break;
@@ -524,4 +465,4 @@ google.maps.event.addListener(map, 'rightclick', function (mouseEvent) {
  		// 		}
  	});
 
- }, 12000);
+ }, 9000);

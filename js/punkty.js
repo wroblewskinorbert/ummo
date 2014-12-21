@@ -1,46 +1,56 @@
-// function getIcon(text, color, scale, positionY) {
-// 	color = 'ff'+color[2]+'0' + color[3]+'0' + color[4]+'0';
-// 	getIcon.positionY = positionY || getIcon.positionY;
-// 	getIcon.color = color ||getIcon.color; 
-// 	getIcon.scale = scale || getIcon.scale;
-// 	getIcon.text = text || getIcon.text;
-	 
-// 	 getIcon.text="O";
-
-// 	var icon = 'http://mt.google.com/vt/icon?psize='+(getIcon.scale*19+8).toFixed(0)+'&font=fonts/Roboto-Bold.ttf&color=' + getIcon.color + '&name=icons/spotlight/spotlight-waypoint-a.png&ax=44&ay=' + getIcon.positionY + '&text=' + getIcon.text + '&scale=' + getIcon.scale;
-// 	return icon
-// }
-// 	getIcon.positionY = 160;
-// 	getIcon.color = 'ffff0000';
-// 	getIcon.scale = 1;
-// 	getIcon.text = "%E2%81%A2"; 
-
 var google, map, impet;
 // JavaScript Document
-// Object.defineProperty(Array.prototype, 'dlaWszystkich', {
-	// value: function (obj) {
-		// var keys = Object.getOwnPropertyNames(obj);
-		// for (var x = 0; x < this.length; x++) {
-			// try {
-				// this[x][keys[0]].apply(this[x], Array.prototype.slice.call((obj[keys[0]]), 0)); //(obj[keys[0]])); //Array.prototype.slice.call((obj[keys[0]]),0));
-				// //		this[x][keys[0]](obj[keys[0]])
-			// } catch (e) {
-				// console.log('nie udało się ukonać operacji na indexie: ' + x);
-			// }
-		// }
-	// },
-	// enumerable: false
+Object.defineProperty(Array.prototype, 'dlaWszystkich', {
+	value: function (obj) {
+		var keys = Object.getOwnPropertyNames(obj);
+		for (var x = 0; x < this.length; x++) {
+			try {
+				this[x][keys[0]].apply(this[x], Array.prototype.slice.call((obj[keys[0]]), 0)); //(obj[keys[0]])); //Array.prototype.slice.call((obj[keys[0]]),0));
+				//		this[x][keys[0]](obj[keys[0]])
+			} catch (e) {
+				console.log('nie udało się ukonać operacji na indexie: ' + x);
+			}
+		}
+	},
+	enumerable: false
 
-// });
+});
+
 function Markero(options) {
-	google.maps.Marker.call(this, options);
+	debugger;
+
 	Markero.markery.push(this);
-	this.markeroId = Markero.id++;
+	this.id = Markero.id++;
+	this.__proto__.__proto__.constructor.call(this, options);
 }
+
 Markero.id = 0;
 Markero.markery = [];
 
-Markero.prototype = Object.create(google.maps.Marker.prototype);
+Markero.prototype = Object.create(google.maps.Marker.prototype, {
+	
+	setVisible1: {
+		value: function (setTo, all) {
+
+			if (all) {
+				Markero.markery.forEach(function (ele) {
+					if (typeof setTo === "undefined") {
+						var setTo = !ele.__proto__.__proto__.getVisible.call(that);
+					}
+					ele.__proto__.__proto__.setVisible.call(this, setTo);
+				});
+			} else {
+				if (typeof setTo === "undefined") {
+					var setTo = !this.__proto__.__proto__.getVisible.call(this);
+				}
+				this.__proto__.__proto__.setVisible.call(this, setTo);
+			}
+
+		},
+		enumerable: false
+	}
+});
+
 Markero.prototype.constructor = Markero;
 
 Markero.show = function () {
@@ -71,31 +81,34 @@ Markero.icon = function (skala, kolor, tekst) {
 		tekst: tekst
 	}
 	return Markero.prototype.icon(options);
-  }
+}
 
 var optionsDefault = {
 	skala: 1,
 	kolor: 'red',
-	tekst: decodeURIComponent('%E2%82%A0')
+	tekst: '!'
 }
 
 Markero.prototype.icon = function (options) {
-var options = $.extend({}, optionsDefault, options);
+	var options = $.extend({}, optionsDefault, options);
 	var skala, kolor, tekst
 	skala = options.skala;
-	kolor = colourNameToHex(options.kolor)||options.kolor ;
+	kolor = options.kolor;
 	tekst = options.tekst;
 	var key = skala + '' + kolor + tekst;
 	if (Markero.old[key]) {
 		return Markero.old[key];
-	} else if (localStorage.getItem('marker'+key)) {
-		Markero.old[key]=JSON.parse(localStorage.getItem('marker'+key));
+	} else if (localStorage.getItem('marker' + key)) {
+		Markero.old[key] = JSON.parse(localStorage.getItem('marker' + key));
 		return Markero.old[key];
 	}
 	var tsize = 14;
-	var strokeColour = '#ff7';
-//	strokeColour = '#' + ('000000' + (1+0xffffff - parseInt(strokeColour.slice(1), 16)).toString(16)).slice(-6); // a prosze negatyw
-	
+	var mojTekst = tekst || ' ';
+	var kolor = kolor || 'red';
+	var skala = skala || 1;
+	var strokeColour = colourNameToHex(kolor) || kolor;
+	strokeColour = '#' + ('000000' + (1 + 0xffffff - parseInt(strokeColour.slice(1), 16)).toString(16)).slice(-6); // a prosze negatyw
+
 	skala *= 1;
 	var szerokosc = Math.ceil(22 * skala);
 	var wysokosc = Math.ceil(37 * skala);
@@ -150,15 +163,15 @@ var options = $.extend({}, optionsDefault, options);
 		.drawText({
 			name: 'text1',
 			layer: true,
-			strokeStyle: strokeColour, //'#000', //
-			fillStyle: 'rgba(255,255,255,1)', //'#fff',
+			strokeStyle: 'rgba(255,1,1,1)', //'#fff',
+			fillStyle: strokeColour, //'#000', //
 			strokeWidth: 0.1,
 			x: 0,
 			y: -25,
 			baseline: 'middle',
 			fontSize: tsize,
 			fontFamily: 'Verdana',
-			text: tekst,
+			text: mojTekst,
 			scale: 1,
 			align: 'center',
 			maxWidth: 18
@@ -174,16 +187,15 @@ var options = $.extend({}, optionsDefault, options);
 
 	});
 	var iconTemp = {
-		//url: getIcon(tekst, 'ff'+kolor.slice(1), skala)
 		url: ncan.getCanvasImage()
 	};
 
 	Markero.marker.setIcon(iconTemp);
 	var mvcObj = Markero.marker.getIcon();
 	Markero.old[key] = mvcObj;
-	try{
-		localStorage['marker'+key]=JSON.stringify(mvcObj);
-	}catch(e){};
+	try {
+		localStorage['marker' + key] = JSON.stringify(mvcObj);
+	} catch (e) {};
 	return Markero.old[key];
 }
 
@@ -193,24 +205,23 @@ Markero.iconName = function (skala, kolor, tekst) {
 		kolor: kolor,
 		tekst: tekst
 	}
-//	return getIcon(tekst, 'ff'+kolor.slice(1), skala);	
 	return Markero.prototype.iconName(options);
 }
 
 
 
 Markero.prototype.iconName = function (options) {
-	
+
 	var options = $.extend({}, optionsDefault, options);
 	var skala, kolor, tekst
 	skala = options.skala;
-	kolor = colourNameToHex(options.kolor)||options.kolor ;
+	kolor = options.kolor;
 	tekst = options.tekst;
 	var key = skala + '' + kolor + tekst;
 	if (Markero.old[key]) {
 		return Markero.old[key];
-	} else if (localStorage.getItem('marker'+key)) {
-		Markero.old[key]=JSON.parse(localStorage.getItem('marker'+key));
+	} else if (localStorage.getItem('marker' + key)) {
+		Markero.old[key] = JSON.parse(localStorage.getItem('marker' + key));
 		return Markero.old[key];
 	}
 	var tsize = 14;
@@ -262,7 +273,6 @@ Markero.prototype.iconName = function (options) {
 
 	});
 	var iconTemp = {
-// 		url: getIcon(tekst, 'ff'+kolor.slice(1), skala)
 		url: ncan.getCanvasImage(),
 		size: new google.maps.Size(Math.round((width + 4), 0), Math.round((height + 5), 0)),
 		anchor: new google.maps.Point(Math.round((width + 4) / 2, 0), (-1) * Math.round((height + 5), 0))
@@ -270,8 +280,8 @@ Markero.prototype.iconName = function (options) {
 	Markero.marker.setIcon(iconTemp);
 	var mvcObj = Markero.marker.getIcon();
 	Markero.old[key] = mvcObj;
-	if (impet.map.zoom==12)	{
-		localStorage['marker'+key]=JSON.stringify(mvcObj);
+	if (impet.map.zoom == 12) {
+		localStorage['marker' + key] = JSON.stringify(mvcObj);
 	}
 	return Markero.old[key];
 }
@@ -288,14 +298,14 @@ Markero.prototype.iconCircle = function (options) {
 	var options = $.extend({}, optionsDefault, options);
 	var skala, kolor, promien
 	skala = options.skala;
-	kolor = colourNameToHex(options.kolor)||options.kolor ;
+	kolor = options.kolor;
 	promien = options.promien;
 	var key = promien + '' + kolor + skala;
 
 	if (Markero.old[key]) {
 		return Markero.old[key];
-	} else if (localStorage.getItem('marker'+key)) {
-		Markero.old[key]=JSON.parse(localStorage.getItem('marker'+key));
+	} else if (localStorage.getItem('marker' + key)) {
+		Markero.old[key] = JSON.parse(localStorage.getItem('marker' + key));
 		return Markero.old[key];
 	}
 	var can = $('<canvas width="400" height="400"></canvas>')
@@ -303,15 +313,15 @@ Markero.prototype.iconCircle = function (options) {
 		translateX: 200,
 		translateY: 200
 	})
-	.drawArc({
-		strokeStyle: '#000',
-		strokeWidth: 1 * skala,
-		fillStyle: kolor,
-		radius: promien * skala,
-		start: 0,
-		end: 360,
-		//scale:skala
-	});
+		.drawArc({
+			strokeStyle: '#000',
+			strokeWidth: 1 * skala,
+			fillStyle: kolor,
+			radius: promien * skala,
+			start: 0,
+			end: 360,
+			//scale:skala
+		});
 	var szerokosc = 2 * promien * skala + 2 * skala + 1;
 	var ncan = $('<canvas width ="' + szerokosc + '" height = "' + szerokosc + '">');
 	can.restoreCanvas();
@@ -321,9 +331,7 @@ Markero.prototype.iconCircle = function (options) {
 		x: szerokosc / 2,
 		y: szerokosc / 2,
 	});
-	var tekst=''; 
 	var iconTemp = {
-// 		url: getIcon(tekst, 'ff'+kolor.slice(1), skala)
 		url: ncan.getCanvasImage(),
 		size: new google.maps.Size(szerokosc, szerokosc),
 		anchor: new google.maps.Point(Math.round(szerokosc / 2, 0), (1) * Math.round(szerokosc / 2, 0))
@@ -331,9 +339,7 @@ Markero.prototype.iconCircle = function (options) {
 	Markero.marker.setIcon(iconTemp);
 	var mvcObj = Markero.marker.getIcon();
 	Markero.old[key] = mvcObj;
-	try{
-		localStorage['marker'+key]=JSON.stringify(mvcObj);
-	}catch(e){};
+	localStorage['marker' + key] = JSON.stringify(mvcObj);
 	return Markero.old[key];
 }
 
@@ -386,9 +392,9 @@ InfoBox.myOptions = {
 	enableEventPropagation: false
 };
 var ib = new InfoBox(InfoBox.myOptions)
- //  ib.open(map, markerGeocoder);
+	//  ib.open(map, markerGeocoder);
 
-Markero.prototype.CreateLabel = function(options) { //{map, content, position, hidden=false,}
+Markero.prototype.CreateLabel = function (options) { //{map, content, position, hidden=false,}
 	var options = options || {};
 	options.content = options.content || 'Etykieta';
 	options.position = options.position || map.getCenter();
@@ -411,14 +417,6 @@ Markero.prototype.CreateLabel = function(options) { //{map, content, position, h
 }
 Markero.prototype.CreateLabel.id = 0;
 Markero.prototype.CreateLabel.labels = [];
-
-
-
-
-
-
-
-
 
 
 

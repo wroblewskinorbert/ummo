@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html><head><title>I'm thinking of a number...</title>
+<script>
+
+window.onload = newgame; // Start a new game when we load
+window.onpopstate = popState; // Handle history events
+var state, ui; // Globals initialized in newgame()
+function newgame(playagain) { // Begin a new game of guess-the-number
+	ui = {
+		heading: null, // The <h1> at the top of the document.
+		prompt: null, // Ask the user to enter a guess.
+		input: null, // Where the user enters the guess.
+		low: null, // Three table cells for the visual representation
+		mid: null, // ...of the range of numbers to guess.
+		high: null
+	};
+	for (var id in ui)
+		ui[id] = document.getElementById(id);
+	ui.input.onchange = handleGuess;
+	state = {
+		n: Math.floor(99 * Math.random()) + 1, // An integer: 0 < n < 100
+		low: 0,
+		high: 100,
+		guessnum: 0,
+		guess: undefined
+	};
+	save(state);
+	display(state);
+}
+function save(state) {
+var url = "#guess" + state.guessnum;
+
+	history.pushState(state,  "",  	url);
+
+//history.replaceState(state,	"",	url);
+
+return;
+// 	if (!history.pushState)
+// 		return; // Do nothing if pushState() not defined
+// 	var url = "#guess" + state.guessnum;
+// 	if (history.state) {
+//		history.pushState(state,  "",  	url);
+//	} else
+//	{
+//		history.replaceState(state,	"",	url); // State URL: not useful to bookmar
+//	}
+}
+// This is the onpopstate event handler that restores historical states.
+function popState(event) {
+	if (event.state) { // If the event has a state object, restore that state
+		state = event.state; // Restore the historical state
+		display(state); // Display the restored state
+	} 
+	
+}
+;
+function handleGuess() {
+	var g = parseInt(this.value);
+	if ((g > state.low) && (g < state.high)) {
+		if (g < state.n)
+			state.low = g;
+		else if (g > state.n)
+			state.high = g;
+		state.guess = g;
+		state.guessnum++;
+		save(state);
+		display(state);
+	} 
+	else { // An invalid guess: don't push a new history state
+		alert("Please enter a number greater than " + state.low + 
+		" and less than " + state.high);
+	}
+}
+function display(state) {
+	ui.heading.innerHTML = document.title = 
+	"I'm thinking of a number between " + 
+	state.low + " and " + state.high + ".";
+	ui.low.style.width = state.low + "%";
+	ui.mid.style.width = (state.high - state.low) + "%";
+	ui.high.style.width = (100 - state.high) + "%";
+	ui.input.style.visibility = "visible";
+	ui.input.value = "";
+	ui.input.focus();
+	if (state.guess === undefined)
+		ui.prompt.innerHTML = "Type your guess and hit Enter: ";
+	else if (state.guess < state.n)
+		ui.prompt.innerHTML = state.guess + " is too low. Guess again: ";
+	else if (state.guess > state.n)
+		ui.prompt.innerHTML = state.guess + " is too high. Guess again: ";
+	else {
+		ui.input.style.visibility = "hidden"; // No more guesses now
+		ui.heading.innerHTML = document.title = state.guess + " is correct! ";
+		ui.prompt.innerHTML = 
+		"You Win! <button onclick='newgame(true)'>Play Again</button>";
+	}
+}
+</script>
+<style>
+/* CSS styles to make the game look good */
+#prompt {
+	font-size: 16pt;
+}
+table {
+	width: 90%;
+	margin: 10px;
+	margin-left: 5%;
+}
+#low, #high {
+	background-color: lightgray;
+	height: 1em;
+}
+#mid {
+	background-color: green;
+}
+</style>
+</head>
+<body><!-- The HTML elements below are the game UI -->
+<h1 id="heading">I'm thinking of a number...</h1>
+<table><tr><td id="low"></td><td id="mid"></td><td id="high"></td></tr></table>
+<label id="prompt"></label><input id="input" type="text">
+</body></html>

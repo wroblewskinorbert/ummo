@@ -1,3 +1,167 @@
+
+/******************************************************************************/
+google.maps.LatLng.prototype.distanceFrom = function (latlng) {
+	var lat = [this.lat(), latlng.lat()]
+	var lng = [this.lng(), latlng.lng()]
+		//var R = 6371; // km (change this constant to get miles)
+	var R = 6378137; // In meters
+	var dLat = (lat[1] - lat[0]) * Math.PI / 180;
+	var dLng = (lng[1] - lng[0]) * Math.PI / 180;
+	var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+		Math.cos(lat[0] * Math.PI / 180) * Math.cos(lat[1] * Math.PI / 180) *
+		Math.sin(dLng / 2) * Math.sin(dLng / 2);
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	var d = R * c;
+	return Math.round(d);
+}
+// TODO: revisar para 179, -179
+google.maps.LatLng.prototype.getMiddle = function (latlng) {
+	var lat = (this.lat() + latlng.lat()) / 2;
+	var lng = this.lng() - latlng.lng(); // Distance between
+
+	// To control the problem with +-180 degrees.
+	if (lng <= 180 && lng >= -180) {
+		lng = (this.lng() + latlng.lng()) / 2;
+	} else {
+		lng = (this.lng() + latlng.lng() + 360) / 2;
+	}
+
+	return new google.maps.LatLng(lat, lng)
+}
+
+// Marker
+/******************************************************************************/
+Markero.prototype.distanceFrom = function (marker) {
+	return this.getPosition()
+		.distanceFrom(marker.getPosition());
+}
+Markero.prototype.getMiddle = function (marker) {
+	return this.getPosition()
+		.getMiddle(marker.getPosition());
+}
+// Polyline
+/******************************************************************************/
+Object.defineProperty(google.maps.Polyline.prototype, 'weight', {
+	set: function (x) {
+		this.set('strokeWeight', x)
+	},
+	get: function () {
+		return this.get('strokeWeight')
+	},
+	configurable: true
+});
+Object.defineProperty(google.maps.Polyline.prototype, 'color', {
+	set: function (x) {
+		this.set('strokeColor', x);
+	},
+	get: function () {
+		return this.get('strokeColor');
+	},
+	configurable: true
+});
+Object.defineProperty(google.maps.Polyline.prototype, 'opacity', {
+	set: function (x) {
+		this.set('strokeOpacity', x);
+	},
+	get: function () {
+		return this.get('strokeOpacity');
+	},
+	configurable: true
+});
+// Object.defineProperty(google.maps.Polyline.prototype, 'visible', {
+// 	set: function (x) {
+// 		this.set('visible', x);
+// 	},
+// 	get: function () {
+// 		return this.get('visible');
+// 	},
+// 	configurable: true
+// });
+google.maps.Polyline.prototype.deleteVertex = function (i) {
+	this.getPath()
+		.removeAt(i);
+}
+google.maps.Polyline.prototype.getBounds = function () {
+	var minLat=90;
+	var maxLat=-90;
+	var minLng=180;
+	var maxLng=-180;
+	
+	for (var x = 0; x < this.latLngs.j.length; x++) {
+		var path = this.latLngs.j[x];
+//debugger;
+		for (var i = 0; i < path.j.length; i++) {
+			var wsp=path.getAt(i);
+			minLat=Math.min(minLat,wsp.lat());
+			maxLat=Math.max(maxLat, wsp.lat());
+			minLng=Math.min(minLng, wsp.lng());
+			maxLng=Math.max(maxLng, wsp.lng());
+		}
+	}
+	var latlngBounds = new google.maps.LatLngBounds(new google.maps.LatLng(minLat,minLng), new google.maps.LatLng(maxLat,maxLng));
+	return latlngBounds;
+}
+
+google.maps.Polyline.prototype.storeState = function () {
+	this.state = {
+		weight: this.weight,
+		color: this.color,
+		opacity: this.opacity,
+		visible: this.getVisible()
+	}
+}
+google.maps.Polyline.prototype.restoreState = function () {
+	try {
+		this.weight = this.state.weight;
+		this.color = this.state.color;
+		this.opacity = this.state.opacity;
+		this.setVisible (this.state.visible);
+	} catch (e) {}
+}
+google.maps.Polyline.prototype.getLength = function () {
+	var d = 0;
+	var path = this.getPath();
+	var latlng;
+
+	for (var i = 0; i < path.getLength() - 1; i++) {
+		latlng = [path.getAt(i), path.getAt(i + 1)]
+		d += latlng[0].distanceFrom(latlng[1]);
+	}
+	return d;
+}
+google.maps.Polyline.prototype.getVertex = function (i) {
+	return this.getPath()
+		.getAt(i);
+}
+google.maps.Polyline.prototype.getVertexCount = function () {
+	return this.getPath()
+		.getLength();
+}
+// google.maps.Polyline.prototype.getVisible = function () {
+// 	return (this.getMap()) ? true : false;
+// }
+google.maps.Polyline.prototype.insertVertex = function (i, latlng) {
+	this.getPath()
+		.insertAt(i, latlng);
+}
+
+google.maps.Polyline.prototype.lastMap = false;
+
+google.maps.Polyline.prototype.setVertex = function (i, latlng) {
+	this.getPath()
+		.setAt(i, latlng);
+}
+
+// google.maps.Polyline.prototype.setVisible = function (visible) {
+// 	if (visible === true && !this.getVisible()) {
+// 		this.setMap(this.lastMap);
+// 	} else if (visible === false && this.getVisible()) {
+// 		this.lastMap = this.getMap();
+// 		this.setMap(null);
+// 	}
+// }
+
+
 weatherLayer = new google.maps.weather.WeatherLayer({
    temperatureUnits: google.maps.weather.TemperatureUnit.CELSIUS
 });
@@ -191,32 +355,6 @@ function przelaczChmury() {
 
 }
 
-layer = new google.maps.FusionTablesLayer({
-		//map: map,
-		heatmap : {
-			enabled : false
-		},
-		query : {
-			select : "col11>>0",
-			from : "1zhJDgZ1lzvTyG7D1uHvi0_LMfrzCVx0-rvAW9h8",
-			where : ""
-		},
-		options : {
-			styleId : 3,
-			templateId : 3
-		},
-		suppressInfoWindows : true
-	});
-layer_1 = new google.maps.FusionTablesLayer({
-		query : {
-			select : "col11>>1",
-			from : "1zhJDgZ1lzvTyG7D1uHvi0_LMfrzCVx0-rvAW9h8"
-		},
-		// map: map,
-		styleId : 2,
-		templateId : 2
-	});
-
 
 function utworzEtykieteNaMapie(tresc, position) {
 	var myOptions = {
@@ -236,9 +374,7 @@ function utworzEtykieteNaMapie(tresc, position) {
 		pane : "mapPane",
 		enableEventPropagation : true
 	};
-	var ibLabel = new InfoBox(myOptions);
-	ibLabel.open(map);
-	return ibLabel;
+
 }
 
 

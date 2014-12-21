@@ -1,32 +1,33 @@
-	zoom: <span style="color:red;" id="zoomText">8</span><br />
-	wyswietlane: <span id="ileMarkerowWyswietlanych"></span>
-	<button id="przeladujObluge">Przeładuj obsługę</button>
-	<hr>
-	<button id="przeladuMape">Przeładuj mapę</button>
-	<br />
-	<button id="dodajTraseDoListyIWyswietl">Dodaj trase do listy</button>
-	<br />
-	<button id='dodajTrase'>Doodaj trase</button>
-	<br/>
-	<button id="wczytajMiejscowosci">Wczytaj miejscowosci</button>
-	<br />
-	<br>Miejscowosc:
-	<br />
-	<input type="text" id="inputMiejscowosc" name="inputMiejscowosc" />
-	<br />
-	<br>Firma:
-	<br />
-	<input type="text" id="inputFirma" name="inputFirma" />
-	<br />
-	<br>
-	<button id="poprzedniaFirma">&lt;&lt;</button>
-	<button id="zapiszRekord">Zapisz</button>
-	<button id="nastepnaFirma">&gt;&gt;</button>
-	<br />Markery wid.:<span id='markeryWidoczne'></span>
-	<br />Tabelę generować?
-	<input type="radio" value="0" name="generowanieTabeli" id="czyGenerowacWOgole" title="Czy wyłączyć generowanie tabeli?" checked>nie
-	<input type="radio" value="1" name="generowanieTabeli" id="czyGenerowacWTle" title="Czy wyłączyć generowanie tabelę w tle?">w tle
-	<input type="radio" value="2" name="generowanieTabeli" id="czyGenerowac" title="Czy generować tabelę?">tak Ocena:
+<html>
+zoom: <span style="color:red;" id="zoomText">8</span>
+<br />wyswietlane: <span id="ileMarkerowWyswietlanych"></span>
+<button id="przeladujObluge">Przeładuj obsługę</button>
+<hr>
+<button id="przeladuMape">Przeładuj mapę</button>
+<br />
+<button id="dodajTraseDoListyIWyswietl">Dodaj trase do listy</button>
+<br />
+<button id='dodajTrase'>Doodaj trase</button>
+<br/>
+<button id="wczytajMiejscowosci">Wczytaj miejscowosci</button>
+<br />
+<br>Miejscowosc:
+<br />
+<input type="text" id="inputMiejscowosc" name="inputMiejscowosc" />
+<br />
+<br>Firma:
+<br />
+<input type="text" id="inputFirma" name="inputFirma" />
+<br />
+<br>
+<button id="poprzedniaFirma">&lt;&lt;</button>
+<button id="zapiszRekord">Zapisz</button>
+<button id="nastepnaFirma">&gt;&gt;</button>
+<br />Markery wid.:<span id='markeryWidoczne'></span>
+<br />Tabelę generować?
+<input type="radio" value="0" name="generowanieTabeli" id="czyGenerowacWOgole" title="Czy wyłączyć generowanie tabeli?" checked>nie
+<input type="radio" value="1" name="generowanieTabeli" id="czyGenerowacWTle" title="Czy wyłączyć generowanie tabelę w tle?">w tle
+<input type="radio" value="2" name="generowanieTabeli" id="czyGenerowac" title="Czy generować tabelę?">tak Ocena:
 <form id="obsluga" name="obluga">
 	<input store name='ogranicznik' id='filtrOcena' title='Filtrowanie poprzez ocenę' type="range" min='-1' max='6' value="-1" /><span id='valfiltrOcena'>-1</span>
 	Priorytet:
@@ -34,25 +35,350 @@
 	<br/>Zoom:
 	<input store name='ogranicznikZoomu' title='Zdecyduj na którym poziomie widzisz za dużo markerów' id='ogranicznikZoomu' type="range" min='5' max='12' value="7" /><span id='valogranicznikZoomu'></span>
 	<br/>
-	<label for="rysowac">Rysować?</label>
-	<input store  type="checkbox" id="rysowac">
-	<br/>
-	<label for="wszyscy">Wszystkie?</label>
-	<input store type="checkbox" id="wszyscy">
-	<br/>
-	<label for="okragle">Okrągłe?</label>
-	<input store type="checkbox" id="okragle">
-	<br/>Wielkość:
+	<div class="maerkerSets">
+		<label for="rysowac" title="Rysować na bieżąco?">R?</label>
+		<input store type="checkbox" id="rysowac">
+		<!--	<br/>-->
+		<label for="wszyscy" title="Wszystkie czy też te z ktorymi już mielismy handel?">W?</label>
+		<input store type="checkbox" id="wszyscy">
+		<!--	<br/>-->
+		<label for="okragle" title="Markery okrągle?">O?</label>
+		<input store type="checkbox" id="okragle">
+	</div>
+	<br/>Wielkość firm:
 	<input store name='ogranicznikWielkosci' title='Jednak ma znaczenie!!!' id='ogranicznikWielkosci' type="range" min='1' max='12' value="2"><span id='valogranicznikWielkosci'>7</span>
+	<br/>Wielkość odwiedzin:
+	<input store name='ogranicznikWielkosciOdwiedzin' title='Jednak ma znaczenie!!!' id='ogranicznikWielkosciOdwiedzin' type="range" min='0.2' max='3' step="0.2" value="0.8"><span id='valogranicznikWielkosciOdwiedzin'>0.8</span>
 	<br/>
-	<label for="wyborMiast">Zaznaczenie wikszych miast w podrozy</label>
-	<input type="checkbox" id="wyborMiast" name="wyborMiast" checked='checked'>
-	<br />
+	<label for="stylWylacznik">Styl</label>
+	<input type="checkbox" id="stylWylacznik" name="stylWylacznik" title="Styl pelny mapy wlaczony?" checked='checked'>
+
+	<!--
 	<br />
 	<label for="markerySchowac">Markery schować?</label>
 	<input  type="checkbox" id="markerySchowac">
 	<label for="miastaSchowac">Miasta schować??</label>
 	<input  type="checkbox" id="miastaSchowac">
+-->
 
 </form>
 <button id='edycjaFirmyButton' onclick="edytujJuz()">edytuj</button>
+<br />
+<br />
+<legend>Ocena</legend>
+<div id="firmaOcenyDiv" style="font-size:12px;">
+	<input type="radio" id="radio0" name="radio" value="0">
+	<label for="radio0">0</label>
+	<input type="radio" id="radio1" name="radio" value="1">
+	<label for="radio1">1</label>
+	<input type="radio" id="radio2" name="radio" value="2">
+	<label for="radio2">2</label>
+	<input type="radio" id="radio3" name="radio" value="3">
+	<label for="radio3">3</label>
+	<input type="radio" id="radio4" name="radio" value="4">
+	<label for="radio4">4</label>
+	<input type="radio" id="radio5" name="radio" value="5">
+	<label for="radio5">5</label>
+	<input type="radio" id="radio6" name="radio" value="6">
+	<label for="radio6">6</label>
+</div>
+<br />
+<legend>Priorytet</legend>
+<div id="firmaPriorytetDiv" style="font-size:12px;">
+	<input type="radio" id="pradio0" name="pradio" value="0">
+	<label for="pradio0">0</label>
+	<input type="radio" id="pradio1" name="pradio" value="1">
+	<label for="pradio1">1</label>
+	<input type="radio" id="pradio2" name="pradio" value="2">
+	<label for="pradio2">2</label>
+	<input type="radio" id="pradio3" name="pradio" value="3">
+	<label for="pradio3">3</label>
+	<input type="radio" id="pradio4" name="pradio" value="4">
+	<label for="pradio4">4</label>
+	<input type="radio" id="pradio5" name="pradio" value="5">
+	<label for="pradio5">5</label>
+	<input type="radio" id="pradio6" name="pradio" value="6">
+	<label for="pradio6">6</label>
+</div>
+	<br />
+	<input store type="checkbox" id="przyciagajDoTrasy" name="przyciagajDoTrasy">
+	<label for="przyciagajDoTrasy">Przyciągać do trasy?</label>
+
+<script>
+	$('.maerkerSets').buttonset().css("fontSize", 12).css("margin", 1);
+	$('#stylWylacznik').button();
+	$('#przyciagajDoTrasy').button();
+	$('.ui-button-text ').css("fontSize", 12).css("margin", 0);
+	$('#stylWylacznik').change(function (e) {
+		if (e.currentTarget.checked) {
+			mapaStyl();
+		} else {
+			mapaStylWylacz();
+		}
+	})
+	setTimeout("$('.maerkerSets input').button('refresh');$('#przyciagajDoTrasy').button('refresh');", 200);
+</script>
+
+<script>
+	function ustawZdarzeniaObslugi() {
+		//		$('#panelLewyHandler').
+		//		ondragEnd
+		$('#panelLewyHandler')
+			.draggable({
+				axis: 'x',
+				helper: 'clone',
+				opacity: 0.35,
+				cursor: 'w-resize'
+			});
+		$('#panelLewyHandler')
+			.on("drag", function (event, ui) {
+				$('#panelLewy')
+					.css('width', ui.position.left);
+			}); //.dragEnd;
+		$('#panelLewyHandler').on("dragstop", function (event, ui) {
+			google.maps.event.trigger(map, 'resize');
+		});
+
+		$('#uchwytPanelDolny')
+			.draggable({
+				axis: 'y',
+				helper: 'clone',
+				opacity: 0.35,
+				cursor: 'w-resize'
+			});
+		$('#uchwytPanelDolny')
+			.on("drag", function (event, ui) {
+				$('#panelDolny')
+					.css('max-height', document.body.clientHeight - event.clientY);
+			});
+
+		
+		$('#dodajTrase')
+			.click(function (e) {
+				var nazwa = prompt("Podaj nazwe trasy");
+				trasy.nowaTrasa(nazwa);
+				e.preventDefault();
+			});
+		$('#dodajTraseDoListyIWyswietl')
+			.click(function (e) {
+				trasy.tblTrasy.unshift(trasy.trasa);
+				trasy.panel.przelacz(true);
+				e.preventDefault();
+				e.stopImmediatePropagation();
+				trasy.wyswietl();
+			});
+
+		
+		$('#button-panel-gorny')
+			.click(function (e) {
+				$(this)
+					.parent()
+					.prev()
+					.slideToggle();
+			})
+			.click();
+		$('#button-panel-gorny2')
+			.click(function (e) {
+				$(this)
+					.parent()
+					.prev()
+					.slideToggle();
+			})
+			.click();
+
+
+		
+		
+		$('#firmaUwagi').off('keyup');
+		$('#firmaUwagi').on('keyup', function () {
+			var plain = {
+				action: 'update',
+				table: 'firmy',
+				data: JSON.stringify({
+					uwagi: this.innerHTML
+				}),
+				condition: 'id =' + impet.fb.id
+			};
+			// 	console.log(plain);
+			$.post(serwer + '/ajax.php', plain).done(function (data) {
+				//		console.log(data)
+			});
+		});
+		$('#firmaUwagi').on('keyup', function () {
+			var plain = {
+				action: 'select',
+				table: 'firmy',
+				data: 0,
+				condition: 'id=' + impet.fb.id
+			};
+			$.post(serwer + '/ajax.php', plain).done(function (data) {
+
+				ib.content_.innerHTML = data[0].uwagi;
+				impet.fb.uwagi = data[0].uwagi;
+				//console.log(data[0].uwagi)
+			});
+		});
+
+		$('#address')
+			.keypress(function (e) {
+				if (e.which === 13) {
+					e.preventDefault();
+					codeAddress();
+				}
+			});
+		$("#pokazPanel").on("click", function () {
+			$("#panelWysuwany").removeClass("hiddenPanelWysuwany");
+			$("#pokazPanel").addClass("hiddenPanelWysuwany");
+			impet.map.stopDraw = true;
+			impet.map.ustawSrodekPolska();
+			wyczyscWszystkie();
+			$("#szukaj").focus().select();
+
+		});
+		$("#remPanel").on("click", function () {
+			$("#panelWysuwany").addClass("hiddenPanelWysuwany");
+			$("#pokazPanel").removeClass("hiddenPanelWysuwany");
+			delete impet.map.stopDraw;
+			markeryNazwa.draw();
+		});
+		$('input#szukaj').on('input click', function () {
+			wyczyscWszystkie();
+			var wynik = [];
+			var szukamy = new RegExp($('input#szukaj')[0].value, 'i');
+			impet.firmy.forEach(function (ele, ind) {
+				if (szukamy.test(ele.nazwa)) {
+					wynik.push(ele);
+					ele.setVisible(true);
+				}
+			});
+		});
+		//$(document).off('keydown');
+
+		// Obsluga ctrl-f i tylko tego
+		$(document).on('keydown', function (e) {
+			if (e.ctrlKey && e.keyCode == 70) {
+				e.stopImmediatePropagation();
+				e.preventDefault();
+				if (!impet.map.stopDraw) {
+					$('#pokazPanel').trigger('click');
+					//$('#panel').css('zIndex', 23);
+					//$('#address').focus();
+				} else {
+					$('#remPanel').trigger('click');
+				}
+			}
+		});
+
+		directionsService = new google.maps.DirectionsService();
+		directionsService.ile = 0;
+		directionsDisplay = new google.maps.DirectionsRenderer();
+		directionsDisplay.setMap(impet.map);
+		window.geocoder = new google.maps.Geocoder();
+		createFormForCompany();
+		impet.zacznijZaznaczanie = function () {
+			$('#panelLewyTrasa li')
+				.removeClass('start stop');
+			$('#panelLewyTrasa')
+				.on('click', 'li', function (e) {
+					$(this)
+						.addClass('start');
+					e.stopImmediatePropagation();
+					$('#panelLewyTrasa')
+						.off(e);
+					$('#panelLewyTrasa')
+						.on('click', 'li', function (e) {
+							$(this)
+								.addClass('stop');
+							e.stopImmediatePropagation();
+							$('#panelLewyTrasa')
+								.off(e);
+							przeliczTrase();
+						});
+				});
+		};
+
+		{
+			markerGeocoder = new Markero({ //google.maps.
+				map: impet.map,
+				visible: false,
+				position: impet.map.getCenter(),
+				draggable: true
+			});
+			markerGeocoder.infoWin = new google.maps.InfoWindow();
+			google.maps.event.addListener(markerGeocoder.infoWin, 'closeclick', function (e) {
+				markerGeocoder.setVisible(false);
+			});
+			impet.map.addListener('dblclick', function (e) {
+				markerGeocoder.setPosition(e.latLng);
+				markerGeocoder.setVisible(true);
+				google.maps.event.trigger(markerGeocoder, 'dragend', e);
+				e.stop();
+			});
+			google.maps.event.addListener(markerGeocoder, 'dragend', function (e) {
+				geocoder.geocode({
+					'latLng': e.latLng,
+					region: 'pl'
+				}, function (results, status) {
+					if (status === google.maps.GeocoderStatus.OK) {
+						if (results[0]) {
+							markerGeocoder.infoWin.setContent('<div><h3>' + results[0].formatted_address + '</h3></div>');
+							markerGeocoder.infoWin.open(impet.map, markerGeocoder);
+							$('#address')
+								.val(e.latLng.lat()
+									.toFixed(6) + ', ' + e.latLng.lng()
+									.toFixed(6));
+						}
+					}
+				});
+			});
+		}
+
+
+		$('[name=radio]').change(function (e) {
+			$.post(serwer + '/ajax/tblFirmaOcenaUpdate.php', {
+				id: impet.fb.id,
+				ocena: 1.0 * this.value
+			});
+			impet.fb.ocena = 1.0 * this.value;
+			impet.fb.setIcon(impet.fb.myIcon);
+			google.maps.event.trigger(map, 'idle');
+			$.post(serwer + '/ajax.php', {
+				action: 'update',
+				condition: 'id=' + impet.fb.id,
+				table: 'firmy',
+				data: JSON.stringify({
+					ocena: this.value
+				})
+			});
+		})
+
+		$('[name=pradio]').change(function (e) {
+			$.post(serwer + '/ajax/tblFirmaPriorytetUpdate.php', {
+				id: impet.fb.id,
+				priorytet: 1.0 * this.value
+			});
+			impet.fb.priorytet = 1.0 * this.value;
+			impet.fb.setIcon(impet.fb.myIcon);
+			google.maps.event.trigger(map, 'idle');
+			$.post(serwer + '/ajax.php', {
+				action: 'update',
+				condition: 'id=' + impet.fb.id,
+				table: 'firmy',
+				data: JSON.stringify({
+					priorytet: this.value
+				})
+			});
+		})
+
+		//		$('[name=firmaOcenaRadio]:checked').val();
+
+		$('#firmaOcenyDiv').buttonset();
+		$('#firmaPriorytetDiv').buttonset();
+
+
+		google.maps.event.trigger(impet.map, 'zoom_changed');
+		google.maps.event.trigger(impet.map, 'bounds_changed');
+		google.maps.event.trigger(impet.map, 'idle');
+	}
+</script>
+</html>
