@@ -181,13 +181,15 @@ window.markeryNazwa = {
 			if (impet.settings.ogranicznikZoomu > impet.zoom || (!((punkt.ocena >= impet.settings.filtrOcena && punkt.priorytet >= impet.settings.filtrPriorytet))) || ((!punkt.khId && !impet.settings.wszyscy))) {
 				//				that.odrzuconeHard.push(punkt);
 				punkt.painted = false;
-				if (punkt.getVisible())
+				if (punkt.getVisible()) {
 					punkt.setVisible(false);
+				}
 			} else {
 				if (!punkt.getVisible() || punkt.painted != true) {
 					punkt.setVisible(true);
-					if (punkt.ocena * punkt.priorytet > 0)
+					if (punkt.ocena * punkt.priorytet > 0) {
 						punkt.markerNazwa.setVisible(true);
+					}
 				}
 				punkt.painted = true;
 			}
@@ -584,7 +586,7 @@ impet.setFb = function (firmaId) {
 		$("#firmaPriorytetDiv").buttonset("refresh");
 	} catch (e) {
 
-	};
+	}
 
 };
 var Zdarzenia = function (id, ile, callback) {
@@ -703,8 +705,8 @@ function uzupelnijFormularz(formularz, dane) {}
 function createFormForCompany() {
 	var wiersz = function (x, tekst, typeOfInput) {
 		var typeOfInput = typeOfInput || "text";
-		return '<label for="' + x + '">' + tekst + '</label><input style="width:100%;" type="' + typeOfInput + '" id="' + x + '" /><br />'
-	}
+		return '<label for="' + x + '">' + tekst + '</label><input style="width:100%;" type="' + typeOfInput + '" id="' + x + '" /><br />';
+	};
 	var formularzFirma = '<form name="formularzFirma" style="width: 370px; float: left"><input id="firmaId" type="hidden" />';
 	formularzFirma += wiersz("nazwa", "Nazwa firmy:");
 	formularzFirma += wiersz("ulica", "Ulica:");
@@ -722,7 +724,7 @@ function createFormForCompany() {
 		'<button onclick="fzapiszEdycje()" id="zapiszEdycje">Zapisz</button></div></p>';
 	window.firmyEdycja = $("<div id='dialogFirmyEdycja'></div>").appendTo(document.body).html(formularzFirma);
 	impet.miejscowosc.forEach(function (ele, ind) {
-		$('#miejscowoscIdSelect').append($('<option value="' + ele.id + '">' + ele.nazwa + '</option>'))
+		$('#miejscowoscIdSelect').append($('<option value="' + ele.id + '">' + ele.nazwa + '</option>'));
 	});
 	window.firmyEdycja.getFB = function () {
 		$('#firmaId').val(impet.fb.id);
@@ -738,7 +740,7 @@ function createFormForCompany() {
 		$('#wspE').val(impet.fb.wspE);
 		$('#uwagi').html(impet.fb.uwagi);
 		$('#address').val(impet.miejscowoscId[impet.fb.miejscowoscId].nazwa + ' ' + impet.fb.ulica);
-	}
+	};
 	window.firmyEdycja.dialog({
 		minWidth: 400,
 		maxWidth: 900,
