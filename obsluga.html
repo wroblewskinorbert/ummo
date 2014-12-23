@@ -9,7 +9,7 @@ zoom: <span style="color:red;" id="zoomText">8</span>
 <br />
 <button id='dodajTrase'>Doodaj trase</button>
 <br/>
-<button id="wczytajMiejscowosci">Wczytaj miejscowosci</button>
+<button id="wczytajTrasy">Wczytaj trasy</button>
 <br />
 <br>Miejscowosc:
 <br />
@@ -100,9 +100,9 @@ zoom: <span style="color:red;" id="zoomText">8</span>
 	<input type="radio" id="pradio6" name="pradio" value="6">
 	<label for="pradio6">6</label>
 </div>
-	<br />
-	<input store type="checkbox" id="przyciagajDoTrasy" name="przyciagajDoTrasy">
-	<label for="przyciagajDoTrasy">Przyciągać do trasy?</label>
+<br />
+<input store type="checkbox" id="przyciagajDoTrasy" name="przyciagajDoTrasy">
+<label for="przyciagajDoTrasy">Przyciągać do trasy?</label>
 
 <script>
 	$('.maerkerSets').buttonset().css("fontSize", 12).css("margin", 1);
@@ -123,6 +123,16 @@ zoom: <span style="color:red;" id="zoomText">8</span>
 	function ustawZdarzeniaObslugi() {
 		//		$('#panelLewyHandler').
 		//		ondragEnd
+		function zaladujObsluga(e) {
+			$.get('obsluga.html', function (data) {
+				$('#divObsluga')
+					.html(data);
+			});
+			e.preventDefault();
+		}
+
+		$('#przeladujObluge').click(zaladujObsluga);
+
 		$('#panelLewyHandler')
 			.draggable({
 				axis: 'x',
@@ -152,7 +162,7 @@ zoom: <span style="color:red;" id="zoomText">8</span>
 					.css('max-height', document.body.clientHeight - event.clientY);
 			});
 
-		
+
 		$('#dodajTrase')
 			.click(function (e) {
 				var nazwa = prompt("Podaj nazwe trasy");
@@ -168,7 +178,7 @@ zoom: <span style="color:red;" id="zoomText">8</span>
 				trasy.wyswietl();
 			});
 
-		
+
 		$('#button-panel-gorny')
 			.click(function (e) {
 				$(this)
@@ -187,8 +197,8 @@ zoom: <span style="color:red;" id="zoomText">8</span>
 			.click();
 
 
-		
-		
+
+
 		$('#firmaUwagi').off('keyup');
 		$('#firmaUwagi').on('keyup', function () {
 			var plain = {
@@ -381,4 +391,5 @@ zoom: <span style="color:red;" id="zoomText">8</span>
 		google.maps.event.trigger(impet.map, 'idle');
 	}
 </script>
+
 </html>

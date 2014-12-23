@@ -7,6 +7,7 @@ var impet = {
 	settings: {}
 };
 impet.firmy.khId = [];
+
 impet.settings = {
 	center: '52.530217, 17.606964',
 	zoom: 10,
@@ -50,7 +51,7 @@ impet._mapCreate = function () {
 	$.get('obsluga.html', function (data) {
 		$('#divObsluga')
 			.html(data);
-		$('#wczytajMiejscowosci')
+		$('#wczytajTrasy')
 			.click(function () {
 				Trasy = new TrasyClass(trasy, impet.map);
 			});
@@ -138,18 +139,16 @@ impet._daneWczytaj = function () {
 };
 
 impet._ustawieniaWczytaj = function () {
-	$('input[store]').each(function (ind, ele) {
+	$('input[store]').each(function (ind, ele) { // każdy node posiadający atrybut store i bedacy inputem będzie zapamiętywany
 		if (ele.type === 'checkbox') {
 			impet.settings[ele.id] = ele.checked = impet.settings[ele.id] || ele.defaultChecked;
 		} else {
-			impet.settings[ele.id] = ele.value = impet.settings[ele.id] || ele.defaultValue;
-			$('#val' + ele.id).html(ele.value);
+			impet.settings[ele.id] = ele.value = impet.settings[ele.id] || ele.defaultValue; // nody mogą zawierać wartośc domyślną
+			$('#val' + ele.id).html(ele.value); // wszystkie nody rozpoczynające sie od val + id inputa będą mialy jego wartosc
 		}
 	});
 };
 impet._ustawieniaZapisz = function () {
-	impet.user = impet.users[$('#wyborPracownika').val()];
-	localStorage['lastUserId'] = impet.settings.lastUserId;
 	var sett = impet.settings; // {};
 	$('input[store]').each(function (ind, ele) {
 		if (ele.type == "checkbox") {
@@ -159,32 +158,41 @@ impet._ustawieniaZapisz = function () {
 		}
 	});
 	localStorage['impet' + impet.settings.lastUserId] = JSON.stringify(sett);
+	impet.user = impet.users[$('#wyborPracownika').val()];
+	localStorage['lastUserId'] = impet.settings.lastUserId;
 };
 
 $.getScript('./js/tabele.js');
 
 window.markeryNazwa = {
 	draw: function () {
-		var that = this;
+		var that = this,
+			widoczne;
 		if (impet.map.stopDraw)
 			return;
 		that.firmyWZakresie = zwrocWZakresie();
 		var len = that.firmyWZakresie.length,
-			x = 0;
-		var rejected = zwrocWZakresie.rejected;
-		var newPoints = zwrocWZakresie.new;
+			widocznePrzefiltrowane = len,
+			x = 0,
+			rejected = zwrocWZakresie.rejected,
+			newPoints = zwrocWZakresie.new;
 		$('#rejectedPoints').html("Odrzucone punkty: " + Object.getOwnPropertyNames(rejected).length);
 		$('#newPoints').html("Dodane swiezo: " + newPoints.length);
 		$('#allPoints').html("Wszystkich: " + len);
+		$('#allVisible').html("Wszystkie widoczne: " + (widoczne = that.firmyWZakresie.filter(function (ele) {
+			if (ele.inView) return ele;
+		}).length));
 		for (x; x < len; x++) {
 			var punkt = that.firmyWZakresie.pop();
 			if (impet.settings.ogranicznikZoomu > impet.zoom || (!((punkt.ocena >= impet.settings.filtrOcena && punkt.priorytet >= impet.settings.filtrPriorytet))) || ((!punkt.khId && !impet.settings.wszyscy))) {
+				widocznePrzefiltrowane--;
 				//				that.odrzuconeHard.push(punkt);
 				punkt.painted = false;
 				if (punkt.getVisible()) {
 					punkt.setVisible(false);
 				}
 			} else {
+				if(punkt.inView===false) widocznePrzefiltrowane--;
 				if (!punkt.getVisible() || punkt.painted != true) {
 					punkt.setVisible(true);
 					if (punkt.ocena * punkt.priorytet > 0) {
@@ -222,6 +230,7 @@ window.markeryNazwa = {
 				}
 			}
 		}
+		$('#allVisibleAfterFilter').html("Po przefiltrowaniu: " + widocznePrzefiltrowane);
 	}
 };
 
