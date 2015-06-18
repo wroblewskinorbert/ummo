@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+	<title>Impet firmy</title>
+	<!-- 	 key=AIzaSyDHaItyuZuyU_DvDJ9y-BnUu7WHionh29A -->
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp?&libraries=weather"></script>
+	<link rel="Shortcut icon" href="./images/impetIkona.png" />
+	<link type="text/css" href="./css/ui.css" rel="stylesheet">
+	<link rel="stylesheet" href="./css/theme.blue.css">
+	<link type="text/css" href="./css/impet.css" rel="stylesheet">
+</head>
+
+<body>
+	<div id="main-container">
+		<div id='divObsluga'></div>
+		<div id='map-container'>
+			<div id="panelLewy">
+				<div id="panelLewyWrapper">
+					<div id="panelLewyTrasa"></div>
+					<div id="panelLewyTrasy">
+					</div>
+					<div id="trasaOpis">
+						<b></b>
+					</div>
+				</div>
+			</div>
+			<div id="panelLewyHandler">
+
+			</div>
+			<button id='buttonTrasy' onclick="impet.zacznijZaznaczanie()">
+				T
+			</button>
+			<div id="mapCanvas">
+			</div>
+		</div>
+	</div>
+	<div id="panelDolny">
+		<div class="handle" id="uchwytPanelDolny">
+		</div>
+		<div id="table-container">
+		</div>
+	</div>
+	<div id="panel">
+		<input id="address" type="textbox" size="30" placeholder="Wpisz szukany adres...">
+		<input type="button" value="Szukaj" onclick="codeAddress()">
+	</div>
+
+	<div id="panel-gorny-container2">
+		<div>
+			<style>
+				
+			</style>
+
+			<div id="panelFirma">
+				<div id="panelFirmaFakturyPodsumowanie">
+					<div id="firmaPodsumowanie">
+					</div>
+					<div id="firmaFaktury">
+						&nbsp;
+
+					</div>
+				</div>
+				<div id="firmaDane">
+					<div id="firmaNazwa">
+						Nazwa
+					</div>
+					<div id="firmaAdres">
+						<span id="firmaUlica">ulica</span>
+						<br /><span id="firmaKod">kod</span>  <span id="firmaMiejscowosc">miejscowosc</span>
+						<br />
+						<p id="firmaTelefony">
+
+						</p>
+						<p id="firmaMaile">
+
+						</p>
+<!--
+						<div id="radioOcena" style="font-size:12px;">
+							<input type="radio" id="radio0" name="radio" value="0">
+							<label for="radio0">0</label>
+							<input type="radio" id="radio1" name="radio" value="1">
+							<label for="radio1">1</label>
+							<input type="radio" id="radio2" name="radio" value="2">
+							<label for="radio2">2</label>
+							<input type="radio" id="radio3" name="radio" value="3">
+							<label for="radio3">3</label>
+							<input type="radio" id="radio4" name="radio" value="4">
+							<label for="radio4">4</label>
+							<input type="radio" id="radio5" name="radio" value="5">
+							<label for="radio5">5</label>
+							<input type="radio" id="radio6" name="radio" value="6">
+							<label for="radio6">6</label>
+						</div>
+						<div id="radioPriorytet" style="font-size:12px;">
+							<input type="radio" id="pradio0" name="pradio" value="0">
+							<label for="pradio0">0</label>
+							<input type="radio" id="pradio1" name="pradio" value="1">
+							<label for="pradio1">1</label>
+							<input type="radio" id="pradio2" name="pradio" value="2">
+							<label for="pradio2">2</label>
+							<input type="radio" id="pradio3" name="pradio" value="3">
+							<label for="pradio3">3</label>
+							<input type="radio" id="pradio4" name="pradio" value="4">
+							<label for="pradio4">4</label>
+							<input type="radio" id="pradio5" name="pradio" value="5">
+							<label for="pradio5">5</label>
+							<input type="radio" id="pradio6" name="pradio" value="6">
+							<label for="pradio6">6</label>
+						</div>
+
+-->
+
+					</div>
+					<div id="firmaPracownicy">
+
+						pracownicy
+
+					</div>
+				</div>
+				<div id="firmaPanelEditor">
+					<div id="firmaUwagi">
+						&nbsp;
+					</div>
+					<div id="firmaUwagiEditor">
+						&nbsp;
+					</div>
+				</div>
+				<div id="firmaZdarzenia">
+					&nbsp;
+				</div>
+			</div>
+			<script>
+			</script>
+		</div>
+		<div id="panel-gorny2">
+			<button id="button-panel-gorny2">
+				Zwiń
+			</button>
+
+		</div>
+	</div>
+
+	<div id="panel-gorny-container">
+		<div id="panel-gorny">
+			<form name="przelaczniki" id=przelaczniki>
+				<fieldset name="fieldDlaPrzelacznikow">
+					<legend>
+						Warstwa:
+					</legend>
+					<ul>
+						<li>
+							<label for="toggleLayer1">Ocena</label>
+							<input type="checkbox" onchange="layer_1.setMap(!$('#toggleLayer1')[0].checked ? null : map);" id='toggleLayer1' />
+						</li>
+						<li>
+							<label for="toggleLayer">Priorytet</label>
+							<input type="checkbox" onchange="layer.setMap(!$('#toggleLayer')[0].checked ? null : map);" id='toggleLayer' />
+						</li>
+						<li>
+							<label for="checkboxPrzelaczPogode">Pogoda</label>
+							<input type="checkbox" onchange="przelaczPogode();" id='checkboxPrzelaczPogode' />
+						</li>
+						<li>
+							<label for="checkboxPrzelaczChmury">Chmury</label>
+							<input type="checkbox" onchange="przelaczChmury();" id='checkboxPrzelaczChmury' />
+						</li>
+					</ul>
+				</fieldset>
+			</form>
+			<div style="float:left; width:250px;">
+				
+				<div id='ustawieniaMiast'>
+					<input type='checkbox' id='czyMiasta'>
+					<input type='color' id='colorMiast'>
+					<div id='opacityMiast'></div>
+				</div>
+				
+				<div id="divAutomatycznieZoom">
+					<label for="czyAutomatycznieZoom">Zoom automatyczny?</label>
+					<input type="checkbox" id="czyAutomatycznieZoom" />
+				</div>
+				<div id="divAutomatycznyPan">
+					<label for="czyAutomatycznyPan">Oddnajdywac punkty?</label>
+					<input type="checkbox" id="czyAutomatycznyPan" />
+				</div>
+				<div id="rejectedPoints"></div>
+				<div id="newPoints"></div>
+				<div id="allPoints"></div>
+				<div id="allVisible"></div>
+				<div id="allVisibleAfterFilter"></div>
+			</div>
+		</div>
+		<div>
+			<button id="button-panel-gorny">
+				Zwijaj
+			</button>
+		</div>
+	</div>
+	<div id="panelWysuwany" class="panelWysuwany hiddenPanelWysuwany">
+		<div class="padding">
+			<form>
+				c
+				<input type="search" id="szukaj" placeholder="Podaj nazwę lub atrybut firmy">
+				<label for="szukaj" class="visuallyhidden">Wyszukiwarka</label>
+			</form>
+			<button id="remPanel" class="close" href="#">&#10006;</button>
+		</div>
+	</div>
+    
+	<button href="#" class="openPokazPanel" id="pokazPanel">Wyszukaj</button>
+	<div id="fakturyPodglad">
+    </div>
+	<script src="http://localhost/jquery-1.10.2.js" type="text/javascript"></script>
+	<script src="http://localhost/jquery-ui.js" type="text/javascript"></script>
+	<script type="text/javascript" src="./NiceEdit/nicEdit.js"></script>
+	<!--
+        <script src="./js/jquery.tablesorter.js" type="text/javascript"></script>
+        <script src="./js/jquery.tablesorter.widgets.js" type="text/javascript"></script>
+-->
+	<script src="./js/infobox.js"></script>
+	<script src="./js/canvas.js"></script>
+	<script src="./js/markery.js"></script>
+	<script src="./js/imp.js" type="text/javascript"></script>
+	<script src="./js/dodatki.js" type="text/javascript"></script>
+	<script src="./js/contextMenu.js"></script>
+</body>
+
+</html>
+

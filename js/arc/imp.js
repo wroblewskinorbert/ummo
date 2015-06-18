@@ -36,11 +36,9 @@ $.extend(impet.settings, loadedSett);
 
 impet._mapCreate = function() {
 	var mapDiv = document.getElementById('mapCanvas')
-	  
-	, 
+	  , 
 	lat = parseFloat(impet.settings.center.slice(0, impet.settings.center.indexOf(',')))
-	  
-	, 
+	  , 
 	lng = parseFloat(impet.settings.center.slice(impet.settings.center.indexOf(',') + 1));
 	impet.map = new google.maps.Map(mapDiv,{
 		disableDoubleClickZoom: true,
@@ -200,17 +198,13 @@ window.markeryNazwa = {
 			return;
 		that.firmyWZakresie = zwrocWZakresie();
 		var len = that.firmyWZakresie.length
-		  
-		, 
+		  , 
 		widocznePrzefiltrowane = len
-		  
-		, 
+		  , 
 		x = 0
-		  
-		, 
+		  , 
 		rejected = zwrocWZakresie.rejected
-		  
-		, 
+		  , 
 		newPoints = zwrocWZakresie.new;
 		$('#rejectedPoints').html("Odrzucone punkty: " + Object.getOwnPropertyNames(rejected).length);
 		$('#newPoints').html("Dodane swiezo: " + newPoints.length);
@@ -404,7 +398,7 @@ function initialize() {
 	//	debugger;
 	ustawZdarzeniaObslugi();
 	
-	$.getScript('./js/TrasyClass.js').fail(function() {
+	$.get('./js/TrasyClass.js').fail(function() {
 		console.log('No niestety nie wczytało tras.')
 	
 	}
@@ -576,11 +570,9 @@ _Firma.prototype.pokazInfoFirmy = function(e) {
 		content = content.replace("{{od}}", firma.od);
 		content = content.replace("{{do}}", firma['do']);
 		var ostatnia = ""
-		  
-		, 
+		  , 
 		obrot = ""
-		  
-		, 
+		  , 
 		spoznienie = "";
 		if (firma.kh) {
 			if (firma.kh.ostatnia)
@@ -780,8 +772,30 @@ function stworzFormularz(dane) {
 }
 
 function uzupelnijFormularz(formularz, dane) {}
-
+// function fzapiszEdycje() {
+// 		var tmpId, tabId;
+// 		var elementToSave = {};
+// 		tabId = $('#dialogFirmyEdycja form > input').each(function(ind, ele) {
+// 			//	debugger;
+// 			if (ele.id != 'firmaId')
+// 				elementToSave[ele.id] = $(ele).val();
+// 			else
+// 				tmpId = $(ele).val();
+// 		}
+// 		);
+// 		elementToSave['uwagi'] = $('#dialogFirmyEdycja #uwagi').html();
+// 		var plain = {
+// 			action: 'update',
+// 			table: 'firmy',
+// 			data: JSON.stringify(
+// 			elementToSave
+// 			),
+// 			condition: 'id =' + tmpId
+// 		};
+// 		$.get(serwer + '/ajax/ajaxuniversal.php', plain);
+// 	}
 function createFormForCompany() {
+	
 	var wiersz = function(x, tekst, typeOfInput) {
 		var typeOfInput = typeOfInput || "text";
 		return '<label for="' + x + '">' + tekst + '</label><input style="width:100%;" type="' + typeOfInput + '" id="' + x + '" /><br />';
@@ -801,7 +815,7 @@ function createFormForCompany() {
 	formularzFirma += '</form><div id="uwagi" style="float: right; border: black 1px solid; margin: 10px 0px; max-width: 370px; font-size: 70%; width:45%;">' + 
 	'</div><div style="clear: both;margin: 10px;">' + 
 	'<p style="padding: 15px;"><button onclick="impet.firmaEdycja.getFB();" id="anulujEdycje">Anuluj</button> ' + 
-	'<button onclick="impet.fzapiszEdycje()" id="zapiszEdycje">Zapisz</button></div></p>';
+	'<button onclick="fzapiszEdycje()" id="zapiszEdycje">Zapisz</button></div></p>';
 	window.firmyEdycja = $("<div id='dialogFirmyEdycja'></div>").appendTo(document.body).html(formularzFirma);
 	impet.miejscowosc.forEach(function(ele, ind) {
 		$('#miejscowoscIdSelect').append($('<option value="' + ele.id + '">' + ele.nazwa + '</option>'));
@@ -845,13 +859,15 @@ function createFormForCompany() {
 		var plain = {
 			action: 'update',
 			table: 'firmy',
-			data: JSON.stringify(elementToSave),
+			data: JSON.stringify(
+			elementToSave
+			),
 			condition: 'id =' + tmpId
 		};
 		$.get(serwer + '/ajax/ajaxuniversal.php', plain);
 	}
 	impet.firmaEdycja = window.firmyEdycja;
-	impet.fzapiszEdycje = fzapiszEdycje;
+	
 	function edytujJuz() {
 		window.firmyEdycja.dialog('open');
 		window.firmyEdycja.getFB();

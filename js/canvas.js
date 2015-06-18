@@ -279,8 +279,9 @@
 		ctx.globalAlpha = params.opacity;
 		ctx.globalCompositeOperation = params.compositing;
 		// Support cross-browser toggling of image smoothing
+		//ctx.CanvasRenderingContext2D.imageSmoothingEnabled
 		if (params.imageSmoothing) {
-			ctx.webkitImageSmoothingEnabled = ctx.mozImageSmoothingEnabled = params.imageSmoothing;
+			ctx.imageSmoothingEnabled = ctx.mozImageSmoothingEnabled = params.imageSmoothing;
 		}
 	}
 
