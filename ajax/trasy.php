@@ -1,5 +1,6 @@
 <?php
 header("Content-type: text/json; charset=UTF-8");
+header('Access-Control-Allow-Origin: http://192.168.2.220');
 
 $connStr = 
         'odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};' .

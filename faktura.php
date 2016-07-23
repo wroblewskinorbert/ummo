@@ -1,5 +1,6 @@
 <?php
 header("Content-type: text/html; charset=UTF-8");
+header('Access-Control-Allow-Origin: *');
 if (!isset($_GET['id'])) die("Spadaj!");
 
 $serverName = "PENTIUM24\INSERTGT";

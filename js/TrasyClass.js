@@ -210,16 +210,16 @@ function TrasyMake() {
 		});
 	};
 	TrasyClass.prototype.nowaTrasa = function(opis, kiedy, kto) { // opis bez polskich znakow koniecznie
-		//debugger
+		
 		var that = this;
-		var opis = opis || 'Brak opisu';
+		var opis = opis || '';
 		var kiedy = kiedy || '2024-01-01';
 		var kto = kto || 4;
 		var quer = "kto=" + kto + "&kiedy=" + kiedy + "&opis=%27" + encodeURIComponent(opis) + "%27";
 		$.post(serwer + "/ajax/trasyInsert.php/?" + quer).done(function(data) {
 			data = data[0];
 			var trasaStart = {
-				id: data.zdId,
+				id: data,
 				kiedy: data.zdDataZak,
 				zdWykonawcaId: data.zdWykonawcaId,
 				kto: impet.users[data.zdWykonawcaId],
@@ -341,7 +341,7 @@ function TrasyMake() {
 	Trasa.prototype.dodaj = function(firma, opacity) {
 		var that = this;
 		var kolejnosc = this.getLength();
-		var quer = ["kto=", this.zdWykonawcaId, "&trasaId=", this.id, "&frmId=", firma.id, "&kolejnosc=", kolejnosc, "&opis=brak&kiedy=", encodeURIComponent(this.kiedy.slice(0, 10))].join('');
+		var quer = ["kto=", this.zdWykonawcaId, "&trasaId=", this.id, "&frmId=", firma.id, "&kolejnosc=", kolejnosc, "&opis=&kiedy=", encodeURIComponent(this.kiedy.slice(0, 10))].join('');
 		$.post(serwer + "/ajax/trasyPunktInsert.php/?" + quer).done(
 		function(data) {
 			data = data[0];
@@ -506,11 +506,12 @@ function TrasyMake() {
 			});
 		})
 		.on('dblclick', 'li', function(e) {
+			//debugger;
 			var firmaId = $(this)
 			.data('id');
 			var firma = impet.firmy[firmaId];
 			firma.setDraggable(!firma.getDraggable());
-			debugger;
+			//debugger;
 			impet.fb = firma.id;
 			wyswietlDaneFirmy();
 		})

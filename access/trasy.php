@@ -1,5 +1,6 @@
 <?php
 header("Content-type: text/json; charset=UTF-8");
+header('Access-Control-Allow-Origin: http://localhost');
 
 $connStr = 
         'odbc:Driver={Microsoft Access Driver (*.mdb, *.accdb)};' .
@@ -9,6 +10,7 @@ $dbh = new PDO($connStr);
 $dbh->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 if (isset($_REQUEST['id']))	{
 	$id= $_REQUEST['id'];
+	echo($id);
 };
 $params = array( $id );
 

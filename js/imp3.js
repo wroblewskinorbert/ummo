@@ -749,7 +749,7 @@ window.onpopstate = function(e) {
 ;
 //zdarzenie zwiazane z historia
 function spanData(dane) {
-   /* var id = dane.id;
+    var id = dane.id;
     //delete dane.id;
     var uwagi = dane.uwagi;
     delete dane.uwagi;
@@ -763,7 +763,7 @@ function spanData(dane) {
     $('#firmaUwagi').html(uwagi);
     formularz.push('</form>');
     var $formularz = $((formularz).join(""));
-    return $formularz; */
+    return $formularz;
 }
 
 function wyswietlDaneFirmy() {

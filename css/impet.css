@@ -54,8 +54,14 @@ div#fakturyPodglad table tr:nth-child(2n){
 	position: absolute;
 	top: 5px;
 	z-index: 22;
+	opacity: 0.2;
+	transition: 0.5s all ease-in;
 }
+#panel:hover {
+	opacity: 1;
+	transition: 0.5s all ease-in;
 
+}
 #main-container {
 	width: 100%;
 	height: 100%;

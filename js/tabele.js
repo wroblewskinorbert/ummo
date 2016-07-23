@@ -48,7 +48,7 @@ SpisFaktur.prototype.callback = function (ile) {
 		element = this.rec[x];
 
 		row.push(element.wystawionyData.date.slice(0, 10));
-		row.push('<a data-id=' + element.id + '" href="http://localhost/faktura.php/?id=' + element.id + '" target="_blank">' + element.nr + '</a>');
+		row.push('<a data-id=' + element.id + '" href="http://192.168.2.220/faktura.php/?id=' + element.id + '" target="_blank">' + element.nr + '</a>');
 		row.push(element.termin);
 		tmpLast = row.push(element.splataSpoznienie) - 1;
 		if (parseInt(element.pozostalo, 10) > 0) {

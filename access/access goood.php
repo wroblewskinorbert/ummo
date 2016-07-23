@@ -23,3 +23,4 @@ while ($row = $sth->fetch()) {
 }
 
 echo json_encode($res);
+?>

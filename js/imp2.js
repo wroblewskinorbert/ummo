@@ -1,5 +1,6 @@
  // Początek
 var impet = {
+    'use strict';
     'firmy': [],
     map: {},
     users: [],
@@ -392,15 +393,15 @@ function initialize() {
     //	debugger;
     ustawZdarzeniaObslugi();
     
-//     $.getScript('./js/TrasyClass.js').fail(function() {
-//         console.log('No niestety nie wczytało tras.')
+    $.getScript('./js/TrasyClass.js').fail(function() {
+        console.log('No niestety nie wczytało tras.')
     
-//     }
-//     ).done(function(scri) {
+    }
+    ).done(function(scri) {
         TrasyMake();
         trasy.wczytajIWyswietl();
-//     }
-//     )
+    }
+    )
     
     myNicEditor = new nicEditor();
     var myNicInstance = myNicEditor.addInstance('firmaUwagi');
@@ -749,7 +750,7 @@ window.onpopstate = function(e) {
 ;
 //zdarzenie zwiazane z historia
 function spanData(dane) {
-   /* var id = dane.id;
+    var id = dane.id;
     //delete dane.id;
     var uwagi = dane.uwagi;
     delete dane.uwagi;
@@ -763,7 +764,7 @@ function spanData(dane) {
     $('#firmaUwagi').html(uwagi);
     formularz.push('</form>');
     var $formularz = $((formularz).join(""));
-    return $formularz; */
+    return $formularz;
 }
 
 function wyswietlDaneFirmy() {
@@ -787,7 +788,7 @@ function codeAd(address, wynik){
 	geocoder2.geocode( { 'address': address}, wynikAd)
 function wynikAd(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
-      wynik( '<p><input type="text" value="'+  results[0].geometry.location.toUrlValue().split(',').join('"/></p><p><input type="text" value="')+'"/></p><p><input type="text" value="'+  results[0].geometry.location.toUrlValue().split(',').join('"/></p><p><input type="text" value="').replace(/\./g,',')+'"/></p>');
+      wynik( '<p><input type="text" value="'+  results[0].geometry.location.toUrlValue().split(',').join('"/></p><p><input type="text" value="')+'"/></p>');
       } else {
       console.log('Geocode was not successful for the following reason: ' + status);
     }
